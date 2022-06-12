@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class GraphInterface extends JFrame implements ActionListener {
 
@@ -51,6 +52,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static LinkedHashMap map;
     private static File s;
     private static String nodeString;
+    private static String nodeString2;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -187,7 +189,7 @@ public class GraphInterface extends JFrame implements ActionListener {
             GMAP.affichageEdgeGraph(map);
             nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
             if(GMAP.getNode(nodeString) == null)
-                JOptionPane.showMessageDialog(null,"Le point n'existe pas sur le graph !");
+                JOptionPane.showMessageDialog(null,"Le point " + nodeString + " n'existe pas sur le graph !");
             else {
                 try {
                     map = GMAP.lectureFichier(s);
@@ -202,7 +204,30 @@ public class GraphInterface extends JFrame implements ActionListener {
             GMAP.affichage1VoisinVilles(GMAP.getNode(nodeString),map);
         }
         if(e.getSource() == centresLoisirs1Voisin){
+            GMAP.affichage1VoisinLoisirs(GMAP.getNode(nodeString),map);
+        }
+        if(e.getSource() == restaurants1Voisin){
+            GMAP.affichage1VoisinResto(GMAP.getNode(nodeString),map);
+        }
 
+        if(e.getSource() == boutonVoisinage){
+            GMAP.affichageNodeGraph(map);
+            GMAP.affichageEdgeGraph(map);
+            do {
+                nodeString = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                if (GMAP.getNode(nodeString) == null)
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
+            }while(GMAP.getNode(nodeString) == null);
+
+            do {
+                nodeString2 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                if (GMAP.getNode(nodeString2) == null)
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString2 + " n'existe pas sur le graph !");
+                if(nodeString.equals(nodeString2))
+                    JOptionPane.showMessageDialog(null,"Les points sont identiques !");
+            }while(GMAP.getNode(nodeString2) == null || nodeString.equals(nodeString2));
+            System.out.println("C'est ok puto");
+            GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2),map);
         }
     }
 
@@ -261,6 +286,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         p.add(Box.createVerticalGlue());
 
         boutonVoisinage = new JButton("Voisinage à 2 sauts");
+        boutonVoisinage.addActionListener(this);
         p.add(boutonVoisinage);
         boutonVoisinage.setAlignmentX(CENTER_ALIGNMENT);
 

@@ -8,6 +8,7 @@ import org.graphstream.ui.view.Viewer;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class GRAPHMAP {
@@ -21,6 +22,8 @@ public class GRAPHMAP {
     private static Graph graphNationales = new MultiGraph("GraphMapNationales");
     private static Graph graphDepartementales = new MultiGraph("GraphMapDepartementales");
     private static Graph graph1VoisinVille = new MultiGraph("GraphMap1VoisinVille");
+    private static Graph graph1VoisinLoisirs = new MultiGraph("GraphMap1VoisinLoisirs");
+    private static Graph graph1VoisinResto = new MultiGraph("GraphMap1VoisinResto");
     private static SpriteManager sman = new SpriteManager(graph); //Objet qui permet d'ajouter un sprite à un élément (node, edge...)
     private static SpriteManager sman1voisin = new SpriteManager(graph1Voisin);
     private static SpriteManager sman2voisin = new SpriteManager(graph2Voisin);
@@ -31,6 +34,8 @@ public class GRAPHMAP {
     private static SpriteManager smanNationales = new SpriteManager(graphNationales);
     private static SpriteManager smanDepartementales = new SpriteManager(graphDepartementales);
     private static SpriteManager sman1VoisinVilles = new SpriteManager(graph1VoisinVille);
+    private static SpriteManager sman1VoisinLoisirs = new SpriteManager(graph1VoisinLoisirs);
+    private static SpriteManager sman1VoisinResto = new SpriteManager(graph1VoisinResto);
     private static LinkedHashMap map;
     private static File s;
     private static Viewer viewer;
@@ -340,7 +345,75 @@ public class GRAPHMAP {
         graph1VoisinVille.display();
     }
 
-    public void Affichage2Distance(Node node1, Node node2){
+    public void affichage1VoisinLoisirs(Node node, LinkedHashMap map){
+        graph1VoisinLoisirs.setAttribute("ui.stylesheet", "url('stylesheet')");
+        Sprite sprite;
+        String[] splitId;
+        graph1VoisinLoisirs.addNode(node.toString());
+        sprite = sman1VoisinLoisirs.addSprite(node.toString()); //On ajoute un "sprite" (ici une zone de texte)...
+        sprite.setAttribute("ui.label",node.toString()); //Le label du point est donc son nom
+        sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
+        Node voisin;
+        Edge heheheha;
+        for(Object i : map.keySet()){
+            voisin = graph.getNode((String) i);
+            if(voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("L")){
+                graph1VoisinLoisirs.addNode(voisin.toString());
+                //Nom sur le node
+                sprite = sman1VoisinLoisirs.addSprite(voisin.toString());
+                sprite.setAttribute("ui.label",voisin.toString());
+                sprite.attachToNode(voisin.toString());
+
+                //Récupération du lien entre node principal et voisin
+                heheheha = node.getEdgeBetween(voisin);
+                splitId = heheheha.getId().split("--");
+                //Ajout lien node / voisin
+                graph1VoisinLoisirs.addEdge(heheheha.getId(),node.toString(),voisin.toString());
+                //Nom sur le lien
+                sprite = sman1VoisinLoisirs.addSprite(heheheha.getId());
+                sprite.setAttribute("ui.label", (splitId[0]));
+                sprite.attachToEdge(heheheha.getId());
+                sprite.setPosition(0.5);
+            }
+        }
+        graph1VoisinLoisirs.display();
+    }
+
+    public void affichage1VoisinResto(Node node, LinkedHashMap map){
+        graph1VoisinResto.setAttribute("ui.stylesheet", "url('stylesheet')");
+        Sprite sprite;
+        String[] splitId;
+        graph1VoisinResto.addNode(node.toString());
+        sprite = sman1VoisinResto.addSprite(node.toString()); //On ajoute un "sprite" (ici une zone de texte)...
+        sprite.setAttribute("ui.label",node.toString()); //Le label du point est donc son nom
+        sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
+        Node voisin;
+        Edge heheheha;
+        for(Object i : map.keySet()){
+            voisin = graph.getNode((String) i);
+            if(voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("R")){
+                graph1VoisinResto.addNode(voisin.toString());
+                //Nom sur le node
+                sprite = sman1VoisinResto.addSprite(voisin.toString());
+                sprite.setAttribute("ui.label",voisin.toString());
+                sprite.attachToNode(voisin.toString());
+
+                //Récupération du lien entre node principal et voisin
+                heheheha = node.getEdgeBetween(voisin);
+                splitId = heheheha.getId().split("--");
+                //Ajout lien node / voisin
+                graph1VoisinResto.addEdge(heheheha.getId(),node.toString(),voisin.toString());
+                //Nom sur le lien
+                sprite = sman1VoisinResto.addSprite(heheheha.getId());
+                sprite.setAttribute("ui.label", (splitId[0]));
+                sprite.attachToEdge(heheheha.getId());
+                sprite.setPosition(0.5);
+            }
+        }
+        graph1VoisinResto.display();
+    }
+
+    public void affichage2Distance(Node node1, Node node2,LinkedHashMap map){
         graph2Voisin.setAttribute("ui.stylesheet", "url('stylesheet')");
         Node voisinCommun;
         Sprite sprite;
@@ -481,17 +554,39 @@ public class GRAPHMAP {
         return Nationales;
     }
 
+    public void getVoisin2Distance(Node node, LinkedHashMap map) {
+        ArrayList<String> list1Voisin = new ArrayList<>();
+        ArrayList<String> list2Voisin = new ArrayList<>();
+        for (Object i : map.keySet()) {
+            Node voisin1Distance = graph.getNode(i.toString());
+            if (node.hasEdgeToward(voisin1Distance))
+                list1Voisin.add(voisin1Distance.toString());
+        }
+        for(Object j : list1Voisin){
+            for(Object i : map.keySet()){
+                Node voisin1Distance = graph.getNode(j.toString());
+                Node voisin2Distance = graph.getNode(i.toString());
+                if(voisin1Distance.hasEdgeToward(voisin2Distance) && node != voisin2Distance && !list2Voisin.contains(voisin2Distance.toString()) && !list1Voisin.contains(voisin2Distance.toString())){
+                    list2Voisin.add(voisin2Distance.toString());
+                }
+            }
+        }
+        System.out.println(list2Voisin);
+    }
+
+
     public static void main(String[] args) throws IOException {
         s = new File("src/testgraph2.csv");
         GRAPHMAP test = new GRAPHMAP();
         map = test.lectureFichier(s);
         test.affichageNodeGraph(map);
         test.affichageEdgeGraph(map);
+        test.getVoisin2Distance(graph.getNode("V,Lyon"),map);
         //test.affichageNodeGraphNationales(map);
         //test.affichageSeulementNationales(map);
         //System.out.println(test.getNombreNationales());
-        test.affichageSeulementVilles(map);
-        test.getVilles();
+        //test.affichageSeulementVilles(map);
+        //test.getVilles();
         //test.affichage1Voisin(graph.getNode("V,Vaulx en velin"));
         //test.Affichage2Distance(graph.getNode("R,La morella"),graph.getNode("V,Oullins"));
     }
