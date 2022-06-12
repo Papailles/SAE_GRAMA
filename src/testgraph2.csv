@@ -1,0 +1,30 @@
+V,Paris:A,120>V,Dijon;D,4>L,Pantheon
+V,Dijon:A,120>V,Paris;D,10>R,Le concept;A,215>V,Dardilly;A,210>V,Ecully;A,220>V,Bron;A,200>V,Lyon
+V,Lyon:D,22>R,Le concept;D,30>L,Olympique rilleux;A,200>V,Dijon;D,10>R,La morella;A,20>V,Miribel;N,23>V,Villeurbanne
+V,Miribel:A,20>V,Lyon;A,30>V,Decines;N,12>V,Rilleux la pape;D,15>R,Aux ptits farcis;N,7>V,Meyzieu
+V,Decines:A,30>V,Miribel;N,15>V,Meyzieu;D,2>L,Groupama stadium;N,20>V,Chassieu;A,20>V,Saint priest;N,20>V,Villeurbanne
+V,Saint priest:A,20>V,Decines;A,10>V,Corbas;A,30>V,Venissieux;A,20>V,Vaulx en velin;N,12>V,Villeurbanne
+V,Venissieux:A,30>V,Saint priest;A,8>V,Oullins;A,5>V,La mulatiere;N,35>V,Vaulx en velin
+V,Vaulx en velin:A,5>V,Villeurbanne;A,20>V,Saint priest;N,35>V,Venissieux;N,20>V,Bron
+V,Bron:A,220>V,Dijon;D,5>L,Parilly;A,20>V,Villeurbanne;N,20>V,Vaulx en velin;N,15>V,La mulatiere;N,8>V,Ecully
+V,Ecully:N,3>V,Dardilly;A,210>V,Dijon;N,8>V,Bron;D,15>L,Aquarium de lyon
+V,Dardilly:A,215>V,Dijon;N,3>V,Ecully
+V,Rilleux la pape:D,9>L,Olympique rilleux;N,12>V,Miribel
+V,Meyzieu:D,10>R,Aux ptits farcis;D,7>L,Groupama stadium;N,15>V,Decines;N,7>V,Miribel
+V,Chassieu:N,20>V,Decines;D,14>L,Groupama stadium;D,25>R,Cavatello;N,35>V,Corbas
+V,Corbas:A,10>V,Saint priest;N,35>V,Chassieu;D,7>R,Cavatello;N,40>V,Oullins
+V,Oullins:A,8>V,Venissieux;N,40>V,Corbas;D,10>R,Le ptit diabl au thym;D,5>R,Les dunes;N,10>V,La mulatiere
+V,La mulatiere:D,3>L,Aquarium de lyon;N,15>V,Bron;A,5>V,Venissieux;N,10>V,Oullins
+V,Villeurbanne:D,4>L,Piscine boulloche;N,20>V,Decines;N,12>V,Saint priest;A,5>V,Vaulx en velin;A,20>V,Bron;D,13>L,Parilly;N,23>V,Lyon
+L,Pantheon:D,4>V,Paris
+L,Olympique rilleux:D,30>V,Lyon;D,9>V,Rilleux la pape
+L,Groupama stadium:D,7>V,Meyzieu;D,14>V,Chassieu;D,2>V,Decines
+L,Aquarium de lyon:D,15>V,Ecully;D,3>V,La mulatiere
+L,Parilly:D,13>V,Villeurbanne;D,5>V,Bron
+L,Piscine boulloche:D,4>V,Villeurbanne
+R,Le concept:D,22>V,Lyon;D,10>V,Dijon
+R,Les dunes:D,5>V,Oullins
+R,Le ptit diabl au thym:D,10>V,Oullins
+R,Cavatello:D,7>V,Corbas;D,25>V,Chassieu
+R,Aux ptits farcis:D,15>V,Miribel;D,10>V,Meyzieu
+R,La morella:D,10>V,Lyon

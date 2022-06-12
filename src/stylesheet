@@ -1,0 +1,13 @@
+node {
+    size: 15px, 15px;
+    fill-color: red;
+    stroke-mode: plain;
+    z-index: 4;
+}
+sprite {
+    text-alignment : under;
+    text-background-mode: plain;
+}
+edge{
+    fill-color: blue;
+}
