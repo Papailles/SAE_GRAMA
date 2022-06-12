@@ -20,6 +20,7 @@ public class GRAPHMAP {
     private static Graph graphAutoroutes = new MultiGraph("GraphMapAutoroutes");
     private static Graph graphNationales = new MultiGraph("GraphMapNationales");
     private static Graph graphDepartementales = new MultiGraph("GraphMapDepartementales");
+    private static Graph graph1VoisinVille = new MultiGraph("GraphMap1VoisinVille");
     private static SpriteManager sman = new SpriteManager(graph); //Objet qui permet d'ajouter un sprite à un élément (node, edge...)
     private static SpriteManager sman1voisin = new SpriteManager(graph1Voisin);
     private static SpriteManager sman2voisin = new SpriteManager(graph2Voisin);
@@ -29,6 +30,7 @@ public class GRAPHMAP {
     private static SpriteManager smanAutoroutes = new SpriteManager(graphAutoroutes);
     private static SpriteManager smanNationales = new SpriteManager(graphNationales);
     private static SpriteManager smanDepartementales = new SpriteManager(graphDepartementales);
+    private static SpriteManager sman1VoisinVilles = new SpriteManager(graph1VoisinVille);
     private static LinkedHashMap map;
     private static File s;
     private static Viewer viewer;
@@ -270,7 +272,7 @@ public class GRAPHMAP {
         }
     }
 
-    public void affichage1Voisin(Node node){
+    public void affichage1Voisin(Node node, LinkedHashMap map){
         graph1Voisin.setAttribute("ui.stylesheet", "url('stylesheet')");
         Sprite sprite;
         String[] splitId;
@@ -301,8 +303,41 @@ public class GRAPHMAP {
                 sprite.setPosition(0.5);
             }
         }
-        graph.display(false);
         graph1Voisin.display();
+    }
+
+    public void affichage1VoisinVilles(Node node, LinkedHashMap map){
+        graph1VoisinVille.setAttribute("ui.stylesheet", "url('stylesheet')");
+        Sprite sprite;
+        String[] splitId;
+        graph1VoisinVille.addNode(node.toString());
+        sprite = sman1VoisinVilles.addSprite(node.toString()); //On ajoute un "sprite" (ici une zone de texte)...
+        sprite.setAttribute("ui.label",node.toString()); //Le label du point est donc son nom
+        sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
+        Node voisin;
+        Edge heheheha;
+        for(Object i : map.keySet()){
+            voisin = graph.getNode((String) i);
+            if(voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("V")){
+                graph1VoisinVille.addNode(voisin.toString());
+                //Nom sur le node
+                sprite = sman1VoisinVilles.addSprite(voisin.toString());
+                sprite.setAttribute("ui.label",voisin.toString());
+                sprite.attachToNode(voisin.toString());
+
+                //Récupération du lien entre node principal et voisin
+                heheheha = node.getEdgeBetween(voisin);
+                splitId = heheheha.getId().split("--");
+                //Ajout lien node / voisin
+                graph1VoisinVille.addEdge(heheheha.getId(),node.toString(),voisin.toString());
+                //Nom sur le lien
+                sprite = sman1VoisinVilles.addSprite(heheheha.getId());
+                sprite.setAttribute("ui.label", (splitId[0]));
+                sprite.attachToEdge(heheheha.getId());
+                sprite.setPosition(0.5);
+            }
+        }
+        graph1VoisinVille.display();
     }
 
     public void Affichage2Distance(Node node1, Node node2){
@@ -358,6 +393,8 @@ public class GRAPHMAP {
     public Graph getGraph() {
         return graph;
     }
+
+    public Node getNode(String nodeString) { return graph.getNode(nodeString); }
 
     public Viewer getViewer(){
         return viewer;

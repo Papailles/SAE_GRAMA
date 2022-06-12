@@ -1,4 +1,5 @@
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
@@ -44,8 +45,12 @@ public class GraphInterface extends JFrame implements ActionListener {
     private JComboBox boxAutoroutes;
     private JComboBox boxDepartementales;
     private JComboBox boxNationales;
+    private JMenuItem villes1Voisin;
+    private JMenuItem centresLoisirs1Voisin;
+    private JMenuItem restaurants1Voisin;
     private static LinkedHashMap map;
     private static File s;
+    private static String nodeString;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -175,6 +180,30 @@ public class GraphInterface extends JFrame implements ActionListener {
             int nbDepartementales = GMAP.getNombreDepartementales();
             JOptionPane.showMessageDialog(null,"Il y a "+ nbDepartementales + " départementales dans ce graph !");
         }
+
+
+        if(e.getSource() == bouton1Distance){
+            GMAP.affichageNodeGraph(map);
+            GMAP.affichageEdgeGraph(map);
+            nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
+            if(GMAP.getNode(nodeString) == null)
+                JOptionPane.showMessageDialog(null,"Le point n'existe pas sur le graph !");
+            else {
+                try {
+                    map = GMAP.lectureFichier(s);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                affichage1Voisin();
+                GMAP.affichage1Voisin(GMAP.getNode(nodeString), map);
+            }
+        }
+        if(e.getSource() == villes1Voisin){
+            GMAP.affichage1VoisinVilles(GMAP.getNode(nodeString),map);
+        }
+        if(e.getSource() == centresLoisirs1Voisin){
+
+        }
     }
 
     public GraphInterface() {
@@ -225,6 +254,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         p.add(Box.createVerticalGlue());
 
         bouton1Distance = new JButton("Affichage 1 distance");
+        bouton1Distance.addActionListener(this);
         p.add(bouton1Distance);
         bouton1Distance.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -360,6 +390,39 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         return voisin0;
     }
+
+    private JFrame affichage1Voisin(){
+        JFrame voisin1 = new JFrame();
+        voisin1.setLayout(new BorderLayout());
+
+        JMenuBar bar1voisin = new JMenuBar();
+
+        JMenu afficherSeulementNoeuds1Voisin = new JMenu("Afficher seulement ");
+        villes1Voisin = new JMenuItem("Villes reliées au point");
+        villes1Voisin.addActionListener(this);
+
+        centresLoisirs1Voisin = new JMenuItem("Centres de loisirs reliés au point");
+        centresLoisirs1Voisin.addActionListener(this);
+
+        restaurants1Voisin = new JMenuItem("Restaurants reliés au point");
+        restaurants1Voisin.addActionListener(this);
+
+        afficherSeulementNoeuds1Voisin.add(villes1Voisin); afficherSeulementNoeuds1Voisin.add(centresLoisirs1Voisin); afficherSeulementNoeuds1Voisin.add(restaurants1Voisin);
+
+        bar1voisin.add(afficherSeulementNoeuds1Voisin);
+        voisin1.setJMenuBar(bar1voisin);
+
+        voisin1.setTitle("Affichage 1 distance");
+        voisin1.setSize(1300, 700); //taille
+        voisin1.setLocationRelativeTo(null); //centrage
+        voisin1.setResizable(false); //non redimensionnable
+        voisin1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        voisin1.setVisible(true);
+
+        return voisin1;
+    }
+
+
     public void setMessageConfirmation(String newMessageConfirmation){
         messageConfirmation.setText(newMessageConfirmation);
     }
