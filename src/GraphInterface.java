@@ -1,8 +1,3 @@
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.graphstream.ui.view.View;
-import org.graphstream.ui.view.Viewer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 public class GraphInterface extends JFrame implements ActionListener {
 
@@ -73,12 +67,13 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JComboBox restos2VoisinPoint2;
     private static JButton quitter = new JButton("Quitter");
     private static GraphInterface test;
-    private static JPanel graph0Voisin;
+    private static JPanel panelGraph0Voisin;
     private static JPanel panel0Voisin;
     private static JPanel lastPanelUsed;
     private static JPanel panelSeulementVilles;
     private static JPanel panelSeulementLoisirs;
     private static JPanel panelSeulementRestos;
+    private static boolean isPanelGraph0VoisinComputed = false;
     private static boolean isPanelSeulementVillesComputed = false;
     private static boolean isPanelSeulementLoisirsComputed = false;
     private static boolean isPanelSeulementRestosComputed = false;
@@ -124,6 +119,20 @@ public class GraphInterface extends JFrame implements ActionListener {
         if(e.getSource() == bouton0Distance) {
             setVisible(false);
             affichage0Voisin();
+
+            if(!isPanelGraph0VoisinComputed) {
+                panelGraph0Voisin = GMAP.affichageNodeGraph(map);
+                GMAP.affichageEdgeGraph(map);
+                lastPanelUsed = panelGraph0Voisin;
+                panel0Voisin.add(panelGraph0Voisin);
+                panel0Voisin.updateUI();
+                isPanelGraph0VoisinComputed = true;
+            }
+            else{
+                lastPanelUsed = panelGraph0Voisin;
+                panel0Voisin.add(panelGraph0Voisin);
+                panel0Voisin.updateUI();
+            }
 
             listerParVilles.setEnabled(false);
             listerParLoisirs.setEnabled(false);
@@ -407,7 +416,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     }
 
     private void constrFen(){
-        setTitle("String moteur interface"); //mise en oeuvze du titre
+        setTitle("Graph Map Analysis"); //mise en oeuvze du titre
         setSize(1000, 500); //taille
         setLocationRelativeTo(null); //centrage
         setResizable(false); //non redimensionnable
@@ -592,12 +601,6 @@ public class GraphInterface extends JFrame implements ActionListener {
         boxNationales = new JComboBox();
         boxNationales.addItem("NATIONALES");
         panel0Voisin.add(boxNationales);
-
-
-        graph0Voisin = GMAP.affichageNodeGraph(map);
-        GMAP.affichageEdgeGraph(map);
-        lastPanelUsed = graph0Voisin;
-        panel0Voisin.add(graph0Voisin);
 
         voisin0.add(panel0Voisin,BorderLayout.CENTER);
 
