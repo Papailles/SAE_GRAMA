@@ -53,6 +53,10 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static File s;
     private static String nodeString;
     private static String nodeString2;
+    private static String nodeString3;
+    private static JLabel plusMoinsOuverte;
+    private static JLabel plusMoinsGastronomique;
+    private static JLabel plusMoinsCulturelle;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -229,6 +233,17 @@ public class GraphInterface extends JFrame implements ActionListener {
             System.out.println("C'est ok puto");
             GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2),map);
         }
+
+        if(e.getSource() == boutonComparaison){
+            GMAP.affichageNodeGraph(map);
+            GMAP.affichageEdgeGraph(map);
+            do{
+                nodeString3 = JOptionPane.showInputDialog("Choisissez un point du graphe");
+                if(GMAP.getNode(nodeString3) == null)
+                    JOptionPane.showMessageDialog(null,"Le point " + nodeString3 + " n'existe pas sur le graph !");
+            }while(GMAP.getNode(nodeString3) == null);
+            affichageComparaison();
+        }
     }
 
     public GraphInterface() {
@@ -264,6 +279,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         boutonChargement = new JButton("Chargement du GRAPHMAP");
         boutonChargement.addActionListener(this);
         p.add(boutonChargement);
+
         messageConfirmation = new JLabel("");
         p.add(messageConfirmation);
         messageConfirmation.setAlignmentX(CENTER_ALIGNMENT);
@@ -293,6 +309,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         p.add(Box.createVerticalGlue());
 
         boutonComparaison = new JButton("Comparaison de sites à 2 distance");
+        boutonComparaison.addActionListener(this);
         p.add(boutonComparaison);
         boutonComparaison.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -448,6 +465,43 @@ public class GraphInterface extends JFrame implements ActionListener {
         return voisin1;
     }
 
+    private JFrame affichageComparaison(){
+        JFrame affichageComparaison = new JFrame();
+
+        JPanel comparaison = new JPanel();
+        comparaison.setLayout(new BoxLayout(comparaison,BoxLayout.Y_AXIS));
+
+        comparaison.add(Box.createVerticalGlue());
+
+        plusMoinsOuverte = new JLabel("Gneugneu");
+        comparaison.add(plusMoinsOuverte);
+        plusMoinsOuverte.setAlignmentX(CENTER_ALIGNMENT);
+
+        comparaison.add(Box.createVerticalGlue());
+
+        plusMoinsCulturelle = new JLabel("Gneugneu2");
+        comparaison.add(plusMoinsCulturelle);
+        plusMoinsCulturelle.setAlignmentX(CENTER_ALIGNMENT);
+
+        comparaison.add(Box.createVerticalGlue());
+
+        plusMoinsGastronomique = new JLabel("Gneugneu3");
+        comparaison.add(plusMoinsGastronomique);
+        plusMoinsGastronomique.setAlignmentX(CENTER_ALIGNMENT);
+
+        comparaison.add(Box.createVerticalGlue());
+
+        affichageComparaison.setTitle("Affichage 1 distance");
+        affichageComparaison.setSize(1300, 700); //taille
+        affichageComparaison.setLocationRelativeTo(null); //centrage
+        affichageComparaison.setResizable(false); //non redimensionnable
+        affichageComparaison.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageComparaison.setVisible(true);
+
+        affichageComparaison.add(comparaison);
+
+        return affichageComparaison;
+    }
 
     public void setMessageConfirmation(String newMessageConfirmation){
         messageConfirmation.setText(newMessageConfirmation);
