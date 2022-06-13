@@ -65,6 +65,9 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JComboBox loisirs2VoisinPoint2;
     private static JComboBox restos2VoisinPoint1;
     private static JComboBox restos2VoisinPoint2;
+    private static JButton retour0Voisin = new JButton("Retour");
+    private static JButton retour1Voisin = new JButton("Retour");
+    private static JButton retourVoisinage = new JButton("Retour");
     private static JButton quitter = new JButton("Quitter");
     private static GraphInterface test;
     private static JPanel panelGraph0Voisin;
@@ -73,10 +76,32 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JPanel panelSeulementVilles;
     private static JPanel panelSeulementLoisirs;
     private static JPanel panelSeulementRestos;
+    private static JPanel panelSeulementAutoroutes;
+    private static JPanel panelSeulementNationales;
+    private static JPanel panelSeulementDepartementales;
     private static boolean isPanelGraph0VoisinComputed = false;
     private static boolean isPanelSeulementVillesComputed = false;
     private static boolean isPanelSeulementLoisirsComputed = false;
     private static boolean isPanelSeulementRestosComputed = false;
+    private static boolean isPanelSeulementAutoroutesComputed = false;
+    private static boolean isPanelSeulementNationalesComputed = false;
+    private static boolean isPanelSeulementDepartementalesComputed = false;
+    private static boolean isPanel1VoisinComputed = false;
+    private static JFrame voisin1;
+    private static JPanel panel1Voisin;
+    private static JPanel panel1VoisinVilles;
+    private static JPanel panel1VoisinLoisirs;
+    private static JPanel panel1VoisinResto;
+    private static boolean isPanel1VoisinVillesComputed = false;
+    private static boolean isPanel1VoisinLoisirsComputed = false;
+    private static boolean isPanel1VoisinRestoComputed = false;
+    private static JFrame voisin0;
+    private static JPanel voisinage;
+    private static JPanel panelVoisinage;
+    private static boolean isPanelVoisinageComputed = false;
+    private static JFrame affichageVoisinage;
+    private static JFrame affichageChoixPoint;
+    private static JPanel panelChoixPoint;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -90,9 +115,15 @@ public class GraphInterface extends JFrame implements ActionListener {
             if(!map.isEmpty()) {
                 setMessageConfirmation("Chargement réussi !");
                 bouton0Distance.setEnabled(true);
-                bouton1Distance.setEnabled(true);
+                if(isPanel1VoisinComputed)
+                    bouton1Distance.setText("Affichage 1 distance (redémarrer le graph pour changer de point)");
+                else
+                    bouton1Distance.setEnabled(true);
+                if(isPanelVoisinageComputed)
+                    boutonVoisinage.setText("Voisinage à 2 distance (redémarrer le graph pour changer de point)");
+                else
+                    boutonVoisinage.setEnabled(true);
                 boutonComparaison.setEnabled(true);
-                boutonVoisinage.setEnabled(true);
             }
             else
                 setMessageConfirmation("Chargement échoué !");
@@ -108,9 +139,16 @@ public class GraphInterface extends JFrame implements ActionListener {
             if(!map.isEmpty()) {
                 setMessageConfirmation("Chargement réussi !");
                 bouton0Distance.setEnabled(true);
-                bouton1Distance.setEnabled(true);
+                if(isPanel1VoisinComputed)
+                    bouton1Distance.setText("Affichage 1 distance (redémarrer le graph pour changer de point");
+                else
+                    bouton1Distance.setEnabled(true);
+                if(isPanelVoisinageComputed)
+                    boutonVoisinage.setText("Voisinage à 2 distance (redémarrer le graph pour changer de point)");
+                else
+                    boutonVoisinage.setEnabled(true);
                 boutonComparaison.setEnabled(true);
-                boutonVoisinage.setEnabled(true);
+
             }
             else
                 setMessageConfirmation("Chargement échoué !");
@@ -196,22 +234,62 @@ public class GraphInterface extends JFrame implements ActionListener {
                 panel0Voisin.add(panelSeulementRestos);
                 panel0Voisin.updateUI();
             }
+            listerParResto.setEnabled(true);
         }
         if(e.getSource() == autoroutes){
-            GMAP.affichageNodeGraphAutoroutes(map);
-            GMAP.affichageSeulementAutoroutes(map);
+            if(!isPanelSeulementAutoroutesComputed) {
+                panelSeulementAutoroutes = GMAP.affichageNodeGraphAutoroutes(map);
+                GMAP.affichageSeulementAutoroutes(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementAutoroutes;
+                panel0Voisin.add(panelSeulementAutoroutes);
+                panel0Voisin.updateUI();
+                isPanelSeulementAutoroutesComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementAutoroutes;
+                panel0Voisin.add(panelSeulementAutoroutes);
+                panel0Voisin.updateUI();
+            }
             nombreAutoroutes.setEnabled(true);
             listerParAutoroutes.setEnabled(true);
         }
         if(e.getSource() == nationales){
-            GMAP.affichageNodeGraphNationales(map);
-            GMAP.affichageSeulementNationales(map);
+            if(!isPanelSeulementNationalesComputed) {
+                panelSeulementNationales = GMAP.affichageNodeGraphNationales(map);
+                GMAP.affichageSeulementNationales(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementNationales;
+                panel0Voisin.add(panelSeulementNationales);
+                panel0Voisin.updateUI();
+                isPanelSeulementNationalesComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementNationales;
+                panel0Voisin.add(panelSeulementNationales);
+                panel0Voisin.updateUI();
+            }
             nombreNationales.setEnabled(true);
             listerParNationales.setEnabled(true);
         }
         if(e.getSource() == departementales){
-            GMAP.affichageNodeGraphDepartementales(map);
-            GMAP.affichageSeulementDepartementales(map);
+            if(!isPanelSeulementDepartementalesComputed){
+                panelSeulementDepartementales = GMAP.affichageNodeGraphDepartementales(map);
+                GMAP.affichageSeulementDepartementales(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementDepartementales;
+                panel0Voisin.add(panelSeulementDepartementales);
+                panel0Voisin.updateUI();
+                isPanelSeulementDepartementalesComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementDepartementales;
+                panel0Voisin.add(panelSeulementDepartementales);
+                panel0Voisin.updateUI();
+            }
             nombreDepartementales.setEnabled(true);
             listerParDepartementales.setEnabled(true);
         }
@@ -273,58 +351,173 @@ public class GraphInterface extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null,"Il y a "+ nbDepartementales + " départementales dans ce graph !");
         }
 
+        if(e.getSource() == retour0Voisin){
+            voisin0.setVisible(false);
+            test = new GraphInterface();
+        }
+
 
         if(e.getSource() == bouton1Distance){
             setVisible(false);
-            GMAP.affichageNodeGraph(map);
-            GMAP.affichageEdgeGraph(map);
-            nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
-            if(GMAP.getNode(nodeString) == null)
-                JOptionPane.showMessageDialog(null,"Le point " + nodeString + " n'existe pas sur le graph !");
-            else {
-                try {
-                    map = GMAP.lectureFichier(s);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                affichage1Voisin();
-                GMAP.affichage1Voisin(GMAP.getNode(nodeString), map);
+            affichage1Voisin();
+
+            if(!isPanelGraph0VoisinComputed) {
+                panelGraph0Voisin = GMAP.affichageNodeGraph(map);
+                GMAP.affichageEdgeGraph(map);
+                lastPanelUsed = panelGraph0Voisin;
+                voisin1.add(panelGraph0Voisin);
+                isPanelGraph0VoisinComputed = true;
+            }
+            else{
+                lastPanelUsed = panelGraph0Voisin;
+                voisin1.add(panelGraph0Voisin);
+            }
+            do {
+                nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
+                if (GMAP.getNode(nodeString) == null)
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
+            }while(GMAP.getNode(nodeString) == null);
+            try {
+                map = GMAP.lectureFichier(s);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if (!isPanel1VoisinComputed) {
+                panel1Voisin = GMAP.affichage1Voisin(GMAP.getNode(nodeString), map);
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1Voisin;
+                voisin1.add(panel1Voisin);
+                isPanel1VoisinComputed = true;
+                panel1Voisin.updateUI();
+            }
+            else{
+                lastPanelUsed = panel1Voisin;
+                voisin1.add(panel1Voisin);
+                panel1Voisin.updateUI();
             }
         }
+
         if(e.getSource() == villes1Voisin){
-            GMAP.affichage1VoisinVilles(GMAP.getNode(nodeString),map);
+            if(!isPanel1VoisinVillesComputed) {
+                panel1VoisinVilles = GMAP.affichage1VoisinVilles(GMAP.getNode(nodeString), map);
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1VoisinVilles;
+                voisin1.add(panel1VoisinVilles);
+                panel1VoisinVilles.updateUI();
+                isPanel1VoisinVillesComputed = true;
+            }
+            else{
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1VoisinVilles;
+                voisin1.add(panel1VoisinVilles);
+                panel1VoisinVilles.updateUI();
+            }
         }
         if(e.getSource() == centresLoisirs1Voisin){
-            GMAP.affichage1VoisinLoisirs(GMAP.getNode(nodeString),map);
+            if(!isPanel1VoisinLoisirsComputed) {
+               panel1VoisinLoisirs = GMAP.affichage1VoisinLoisirs(GMAP.getNode(nodeString), map);
+               voisin1.remove(lastPanelUsed);
+               lastPanelUsed = panel1VoisinLoisirs;
+               voisin1.add(panel1VoisinLoisirs);
+               panel1VoisinLoisirs.updateUI();
+               isPanel1VoisinLoisirsComputed = true;
+            }
+            else{
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1VoisinLoisirs;
+                voisin1.add(panel1VoisinLoisirs);
+                panel1VoisinLoisirs.updateUI();
+            }
         }
         if(e.getSource() == restaurants1Voisin){
-            GMAP.affichage1VoisinResto(GMAP.getNode(nodeString),map);
+            if(!isPanel1VoisinRestoComputed) {
+                panel1VoisinResto = GMAP.affichage1VoisinResto(GMAP.getNode(nodeString), map);
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1VoisinResto;
+                voisin1.add(panel1VoisinResto);
+                panel1VoisinResto.updateUI();
+                isPanel1VoisinRestoComputed = true;
+            }
+            else{
+                voisin1.remove(lastPanelUsed);
+                lastPanelUsed = panel1VoisinResto;
+                voisin1.add(panel1VoisinResto);
+                panel1VoisinResto.updateUI();
+            }
         }
 
-        if(e.getSource() == boutonVoisinage){
+        if(e.getSource() == retour1Voisin){
+            voisin1.setVisible(false);
+            test = new GraphInterface();
+        }
+
+        if(e.getSource() == boutonVoisinage) {
             setVisible(false);
-            GMAP.affichageNodeGraph(map);
-            GMAP.affichageEdgeGraph(map);
+            affichageVoisinage();
+
+            if (!isPanelGraph0VoisinComputed) {
+                panelGraph0Voisin = GMAP.affichageNodeGraph(map);
+                GMAP.affichageEdgeGraph(map);
+                lastPanelUsed = panelGraph0Voisin;
+                voisinage.add(panelGraph0Voisin);
+                isPanelGraph0VoisinComputed = true;
+            }
+            else{
+                lastPanelUsed = panelGraph0Voisin;
+                voisinage.add(panelGraph0Voisin);
+            }
             do {
                 nodeString = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                 if (GMAP.getNode(nodeString) == null)
                     JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
-            }while(GMAP.getNode(nodeString) == null);
+            } while (GMAP.getNode(nodeString) == null);
 
             do {
                 nodeString2 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                 if (GMAP.getNode(nodeString2) == null)
                     JOptionPane.showMessageDialog(null, "Le point " + nodeString2 + " n'existe pas sur le graph !");
-                if(nodeString.equals(nodeString2))
-                    JOptionPane.showMessageDialog(null,"Les points sont identiques !");
-            }while(GMAP.getNode(nodeString2) == null || nodeString.equals(nodeString2));
-            GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2),map);
+                if (nodeString.equals(nodeString2))
+                    JOptionPane.showMessageDialog(null, "Les points sont identiques !");
+            } while (GMAP.getNode(nodeString2) == null || nodeString.equals(nodeString2));
+
+            if (!isPanelVoisinageComputed){
+                panelVoisinage = GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2), map);
+                voisinage.remove(lastPanelUsed);
+                lastPanelUsed = panelVoisinage;
+                voisinage.add(panelVoisinage);
+                panelVoisinage.updateUI();
+                isPanelVoisinageComputed = true;
+            }
+            else{
+                voisinage.remove(lastPanelUsed);
+                lastPanelUsed = panelVoisinage;
+                voisinage.add(panelVoisinage);
+                panelVoisinage.updateUI();
+            }
+        }
+        if(e.getSource() == retourVoisinage){
+            affichageVoisinage.setVisible(false);
+            test = new GraphInterface();
         }
 
         if(e.getSource() == boutonComparaison){
             setVisible(false);
-            GMAP.affichageNodeGraph(map);
-            GMAP.affichageEdgeGraph(map);
+            if (!isPanelGraph0VoisinComputed) {
+                panelGraph0Voisin = GMAP.affichageNodeGraph(map);
+                GMAP.affichageEdgeGraph(map);
+                lastPanelUsed = panelGraph0Voisin;
+                comparaisonChoixPoint();
+                affichageChoixPoint.add(panelChoixPoint);
+                panelChoixPoint = panelGraph0Voisin;
+                affichageChoixPoint.add(panelChoixPoint);
+                isPanelGraph0VoisinComputed = true;
+            }
+            else{
+                lastPanelUsed = panelGraph0Voisin;
+                comparaisonChoixPoint();
+                panelChoixPoint = panelGraph0Voisin;
+                affichageChoixPoint.add(panelChoixPoint);
+            }
             do {
                 nodeString3 = JOptionPane.showInputDialog("Choisissez la première ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                 if (GMAP.getNode(nodeString3) == null)
@@ -343,6 +536,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'est pas une ville !");
             }while(GMAP.getNode(nodeString4) == null || nodeString3.equals(nodeString4) || !nodeString4.startsWith("V"));
 
+            affichageChoixPoint.setVisible(false);
             ArrayList<String> voisin2DistancePoint1 = new ArrayList<>();
             ArrayList<String> voisin2DistancePoint2 = new ArrayList<>();
             voisin2DistancePoint1 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString3),map);
@@ -492,7 +686,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     }
 
     private JFrame affichage0Voisin(){
-        JFrame voisin0 = new JFrame();
+        voisin0 = new JFrame();
         voisin0.setLayout(new BorderLayout());
 
         JMenuBar bar0voisin = new JMenuBar();
@@ -604,13 +798,14 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         voisin0.add(panel0Voisin,BorderLayout.CENTER);
 
-        voisin0.add(quitter,BorderLayout.SOUTH);
+        voisin0.add(retour0Voisin,BorderLayout.SOUTH);
+        retour0Voisin.addActionListener(this);
 
         return voisin0;
     }
 
     private JFrame affichage1Voisin(){
-        JFrame voisin1 = new JFrame();
+        voisin1 = new JFrame();
         voisin1.setLayout(new BorderLayout());
 
         JMenuBar bar1voisin = new JMenuBar();
@@ -637,7 +832,29 @@ public class GraphInterface extends JFrame implements ActionListener {
         voisin1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
         voisin1.setVisible(true);
 
+        voisin1.add(retour1Voisin,BorderLayout.SOUTH);
+        retour1Voisin.addActionListener(this);
+
         return voisin1;
+    }
+
+    private JFrame affichageVoisinage(){
+        affichageVoisinage = new JFrame();
+        voisinage = new JPanel(new BorderLayout());
+
+        voisinage.add(retourVoisinage,BorderLayout.SOUTH);
+        retourVoisinage.addActionListener(this);
+
+        affichageVoisinage.add(voisinage);
+
+        affichageVoisinage.setTitle("Affichage voisinage 2 distance");
+        affichageVoisinage.setSize(1300, 700); //taille
+        affichageVoisinage.setLocationRelativeTo(null); //centrage
+        affichageVoisinage.setResizable(false); //non redimensionnable
+        affichageVoisinage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageVoisinage.setVisible(true);
+
+        return affichageVoisinage;
     }
 
     private JFrame affichageComparaison(){
@@ -705,7 +922,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         comparaison.add(Box.createVerticalGlue());
 
-        affichageComparaison.setTitle("Affichage 1 distance");
+        affichageComparaison.setTitle("Affichage comparaison à 2 distance");
         affichageComparaison.setSize(1300, 700); //taille
         affichageComparaison.setLocationRelativeTo(null); //centrage
         affichageComparaison.setResizable(false); //non redimensionnable
@@ -716,6 +933,23 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         return affichageComparaison;
     }
+
+    private JFrame comparaisonChoixPoint(){
+        affichageChoixPoint = new JFrame();
+        panelChoixPoint = new JPanel();
+
+        affichageChoixPoint.add(panelChoixPoint);
+
+        affichageChoixPoint.setTitle("Affichage comparaison 2 distance - choix des points");
+        affichageChoixPoint.setSize(800, 500); //taille
+        affichageChoixPoint.setLocationRelativeTo(null); //centrage
+        affichageChoixPoint.setResizable(false); //non redimensionnable
+        affichageChoixPoint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageChoixPoint.setVisible(true);
+
+        return affichageChoixPoint;
+    }
+
 
     public void setMessageConfirmation(String newMessageConfirmation){
         messageConfirmation.setText(newMessageConfirmation);

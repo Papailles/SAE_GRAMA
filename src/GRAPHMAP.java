@@ -224,8 +224,17 @@ public class GRAPHMAP {
         return graphPanel;
     }
 
-    public void affichageNodeGraphAutoroutes(LinkedHashMap map){
+    public JPanel affichageNodeGraphAutoroutes(LinkedHashMap map){
         graphAutoroutes.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graphAutoroutes, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String mot = "";
         for(Object i : map.keySet()){ //On récupère toutes les clés
@@ -235,7 +244,12 @@ public class GRAPHMAP {
             sprite.setAttribute("ui.label",mot); //Le label du point est donc son nom
             sprite.attachToNode(mot); //... qu'on vient "attacher" au point créé
         }
-        graphAutoroutes.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
     public void affichageSeulementAutoroutes(LinkedHashMap map){
@@ -262,8 +276,17 @@ public class GRAPHMAP {
         }
     }
 
-    public void affichageNodeGraphNationales(LinkedHashMap map){
+    public JPanel affichageNodeGraphNationales(LinkedHashMap map){
         graphNationales.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graphNationales, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String mot = "";
         for(Object i : map.keySet()){ //On récupère toutes les clés
@@ -273,7 +296,12 @@ public class GRAPHMAP {
             sprite.setAttribute("ui.label",mot); //Le label du point est donc son nom
             sprite.attachToNode(mot); //... qu'on vient "attacher" au point créé
         }
-        graphNationales.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
     public void affichageSeulementNationales(LinkedHashMap map){
@@ -300,8 +328,17 @@ public class GRAPHMAP {
         }
     }
 
-    public void affichageNodeGraphDepartementales(LinkedHashMap map){
+    public JPanel affichageNodeGraphDepartementales(LinkedHashMap map){
         graphDepartementales.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graphDepartementales, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String mot = "";
         for(Object i : map.keySet()){ //On récupère toutes les clés
@@ -311,7 +348,12 @@ public class GRAPHMAP {
             sprite.setAttribute("ui.label",mot); //Le label du point est donc son nom
             sprite.attachToNode(mot); //... qu'on vient "attacher" au point créé
         }
-        graphDepartementales.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
     public void affichageSeulementDepartementales(LinkedHashMap map){
@@ -338,8 +380,17 @@ public class GRAPHMAP {
         }
     }
 
-    public void affichage1Voisin(Node node, LinkedHashMap map){
+    public JPanel affichage1Voisin(Node node, LinkedHashMap map){
         graph1Voisin.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graph1Voisin, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String[] splitId;
         graph1Voisin.addNode(node.toString());
@@ -369,11 +420,25 @@ public class GRAPHMAP {
                 sprite.setPosition(0.5);
             }
         }
-        graph1Voisin.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
-    public void affichage1VoisinVilles(Node node, LinkedHashMap map){
+    public JPanel affichage1VoisinVilles(Node node, LinkedHashMap map){
         graph1VoisinVille.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graph1VoisinVille, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String[] splitId;
         graph1VoisinVille.addNode(node.toString());
@@ -403,11 +468,25 @@ public class GRAPHMAP {
                 sprite.setPosition(0.5);
             }
         }
-        graph1VoisinVille.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
-    public void affichage1VoisinLoisirs(Node node, LinkedHashMap map){
+    public JPanel affichage1VoisinLoisirs(Node node, LinkedHashMap map){
         graph1VoisinLoisirs.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graph1VoisinLoisirs, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String[] splitId;
         graph1VoisinLoisirs.addNode(node.toString());
@@ -437,11 +516,25 @@ public class GRAPHMAP {
                 sprite.setPosition(0.5);
             }
         }
-        graph1VoisinLoisirs.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
-    public void affichage1VoisinResto(Node node, LinkedHashMap map){
+    public JPanel affichage1VoisinResto(Node node, LinkedHashMap map){
         graph1VoisinResto.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graph1VoisinResto, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Sprite sprite;
         String[] splitId;
         graph1VoisinResto.addNode(node.toString());
@@ -471,11 +564,25 @@ public class GRAPHMAP {
                 sprite.setPosition(0.5);
             }
         }
-        graph1VoisinResto.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
-    public void affichage2Distance(Node node1, Node node2,LinkedHashMap map){
+    public JPanel affichage2Distance(Node node1, Node node2, LinkedHashMap map){
         graph2Voisin.setAttribute("ui.stylesheet", "url('stylesheet')");
+
+        Layout graphLayout = new SpringBox(false);
+        SwingViewer viewer = new SwingViewer(graph2Voisin, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        JPanel graphPanel = new JPanel();
+
+        DefaultView view = (DefaultView) viewer.addDefaultView(false);
+        view.setPreferredSize(new Dimension(800, 500));
+
         Node voisinCommun;
         Sprite sprite;
         Edge lien;
@@ -517,7 +624,12 @@ public class GRAPHMAP {
 
             }
         }
-        graph2Voisin.display();
+        graphLayout.compute();
+
+        viewer.enableAutoLayout();
+
+        graphPanel.add(view);
+        return graphPanel;
     }
 
     public LinkedHashMap getMap(){
@@ -643,7 +755,8 @@ public class GRAPHMAP {
         JPanel panel = new JPanel();
         panel = test.affichageNodeGraph(map);
         test.affichageEdgeGraph(map);
-        panel = test.affichageSeulementRestaurants(map);
+        panel = test.affichageNodeGraphNationales(map);
+        test.affichageSeulementNationales(map);
         JFrame fjsmjfls = new JFrame();
         fjsmjfls.add(panel);
         fjsmjfls.setVisible(true);
