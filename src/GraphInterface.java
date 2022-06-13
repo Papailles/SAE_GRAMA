@@ -73,6 +73,15 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JComboBox restos2VoisinPoint2;
     private static JButton quitter = new JButton("Quitter");
     private static GraphInterface test;
+    private static JPanel graph0Voisin;
+    private static JPanel panel0Voisin;
+    private static JPanel lastPanelUsed;
+    private static JPanel panelSeulementVilles;
+    private static JPanel panelSeulementLoisirs;
+    private static JPanel panelSeulementRestos;
+    private static boolean isPanelSeulementVillesComputed = false;
+    private static boolean isPanelSeulementLoisirsComputed = false;
+    private static boolean isPanelSeulementRestosComputed = false;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -126,22 +135,58 @@ public class GraphInterface extends JFrame implements ActionListener {
             nombreAutoroutes.setEnabled(false);
             nombreDepartementales.setEnabled(false);
             nombreNationales.setEnabled(false);
-
-            GMAP.affichageNodeGraph(map);
-            GMAP.affichageEdgeGraph(map);
         }
 
         if(e.getSource() == villes){
-            GMAP.affichageSeulementVilles(map);
+            if(!isPanelSeulementVillesComputed){
+                panelSeulementVilles = GMAP.affichageSeulementVilles(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementVilles;
+                panel0Voisin.add(panelSeulementVilles);
+                panel0Voisin.updateUI();
+                isPanelSeulementVillesComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementVilles;
+                panel0Voisin.add(panelSeulementVilles);
+                panel0Voisin.updateUI();
+            }
             listerParVilles.setEnabled(true);
+
         }
         if(e.getSource() == centresLoisirs){
-            GMAP.affichageSeulementLoisirs(map);
+            if(!isPanelSeulementLoisirsComputed) {
+                panelSeulementLoisirs = GMAP.affichageSeulementLoisirs(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementLoisirs;
+                panel0Voisin.add(panelSeulementLoisirs);
+                panel0Voisin.updateUI();
+                isPanelSeulementLoisirsComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementLoisirs;
+                panel0Voisin.add(panelSeulementLoisirs);
+                panel0Voisin.updateUI();
+            }
             listerParLoisirs.setEnabled(true);
         }
         if(e.getSource() == restaurants){
-            GMAP.affichageSeulementRestaurants(map);
-            listerParResto.setEnabled(true);
+            if(!isPanelSeulementRestosComputed) {
+                panelSeulementRestos = GMAP.affichageSeulementRestaurants(map);
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementRestos;
+                panel0Voisin.add(panelSeulementRestos);
+                panel0Voisin.updateUI();
+                isPanelSeulementRestosComputed = true;
+            }
+            else{
+                panel0Voisin.remove(lastPanelUsed);
+                lastPanelUsed = panelSeulementRestos;
+                panel0Voisin.add(panelSeulementRestos);
+                panel0Voisin.updateUI();
+            }
         }
         if(e.getSource() == autoroutes){
             GMAP.affichageNodeGraphAutoroutes(map);
@@ -521,34 +566,40 @@ public class GraphInterface extends JFrame implements ActionListener {
         voisin0.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
         voisin0.setVisible(true);
 
-        JPanel p = new JPanel();
-        p.setLayout(new FlowLayout());
+        panel0Voisin = new JPanel();
+        panel0Voisin.setLayout(new FlowLayout());
 
         boxVilles = new JComboBox();
         boxVilles.addItem("VILLES");
-        p.add(boxVilles);
+        panel0Voisin.add(boxVilles);
 
         boxLoisirs = new JComboBox();
         boxLoisirs.addItem("CENTRES DE LOISIRS");
-        p.add(boxLoisirs);
+        panel0Voisin.add(boxLoisirs);
 
         boxResto = new JComboBox();
         boxResto.addItem("RESTAURANTS");
-        p.add(boxResto);
+        panel0Voisin.add(boxResto);
 
         boxAutoroutes = new JComboBox();
         boxAutoroutes.addItem("AUTOROUTES");
-        p.add(boxAutoroutes);
+        panel0Voisin.add(boxAutoroutes);
 
         boxDepartementales = new JComboBox();
         boxDepartementales.addItem("DEPARTEMENTALES");
-        p.add(boxDepartementales);
+        panel0Voisin.add(boxDepartementales);
 
         boxNationales = new JComboBox();
         boxNationales.addItem("NATIONALES");
-        p.add(boxNationales);
+        panel0Voisin.add(boxNationales);
 
-        voisin0.add(p,BorderLayout.CENTER);
+
+        graph0Voisin = GMAP.affichageNodeGraph(map);
+        GMAP.affichageEdgeGraph(map);
+        lastPanelUsed = graph0Voisin;
+        panel0Voisin.add(graph0Voisin);
+
+        voisin0.add(panel0Voisin,BorderLayout.CENTER);
 
         voisin0.add(quitter,BorderLayout.SOUTH);
 
