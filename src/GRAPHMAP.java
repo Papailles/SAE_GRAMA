@@ -8,7 +8,6 @@ import org.graphstream.ui.view.Viewer;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class GRAPHMAP {
@@ -554,7 +553,7 @@ public class GRAPHMAP {
         return Nationales;
     }
 
-    public void getVoisin2Distance(Node node, LinkedHashMap map) {
+    public ArrayList<String> getVoisin2Distance(Node node, LinkedHashMap map) {
         ArrayList<String> list1Voisin = new ArrayList<>();
         ArrayList<String> list2Voisin = new ArrayList<>();
         for (Object i : map.keySet()) {
@@ -571,7 +570,7 @@ public class GRAPHMAP {
                 }
             }
         }
-        System.out.println(list2Voisin);
+        return list2Voisin;
     }
 
 
@@ -581,7 +580,7 @@ public class GRAPHMAP {
         map = test.lectureFichier(s);
         test.affichageNodeGraph(map);
         test.affichageEdgeGraph(map);
-        test.getVoisin2Distance(graph.getNode("V,Lyon"),map);
+        //test.getVoisin2Distance(graph.getNode("V,Lyon"),map);
         //test.affichageNodeGraphNationales(map);
         //test.affichageSeulementNationales(map);
         //System.out.println(test.getNombreNationales());

@@ -17,6 +17,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
     private GRAPHMAP GMAP;
     private JButton boutonChargement;
+    private JButton boutonChargementGraphFourni;
     private JButton bouton0Distance;
     private JButton bouton1Distance;
     private JButton boutonVoisinage;
@@ -54,14 +55,46 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static String nodeString;
     private static String nodeString2;
     private static String nodeString3;
+    private static String nodeString4;
     private static JLabel plusMoinsOuverte;
     private static JLabel plusMoinsGastronomique;
     private static JLabel plusMoinsCulturelle;
+    private static int nbVillesPoint1;
+    private static int nbVillesPoint2;
+    private static int nbLoisirsPoint1;
+    private static int nbLoisirsPoint2;
+    private static int nbRestoPoint1;
+    private static int nbRestoPoint2;
+    private static JComboBox villes2VoisinPoint1;
+    private static JComboBox villes2VoisinPoint2;
+    private static JComboBox loisirs2VoisinPoint1;
+    private static JComboBox loisirs2VoisinPoint2;
+    private static JComboBox restos2VoisinPoint1;
+    private static JComboBox restos2VoisinPoint2;
+    private static JButton quitter = new JButton("Quitter");
+    private static GraphInterface test;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == boutonChargement){
             s = new File(this.getPath());
+            try {
+                map = GMAP.lectureFichier(s);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(!map.isEmpty()) {
+                setMessageConfirmation("Chargement réussi !");
+                bouton0Distance.setEnabled(true);
+                bouton1Distance.setEnabled(true);
+                boutonComparaison.setEnabled(true);
+                boutonVoisinage.setEnabled(true);
+            }
+            else
+                setMessageConfirmation("Chargement échoué !");
+
+        }
+        if(e.getSource() == boutonChargementGraphFourni){
             s = new File("src/testgraph2.csv");
             try {
                 map = GMAP.lectureFichier(s);
@@ -75,7 +108,6 @@ public class GraphInterface extends JFrame implements ActionListener {
                 boutonComparaison.setEnabled(true);
                 boutonVoisinage.setEnabled(true);
             }
-
             else
                 setMessageConfirmation("Chargement échoué !");
         }
@@ -189,6 +221,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
 
         if(e.getSource() == bouton1Distance){
+            setVisible(false);
             GMAP.affichageNodeGraph(map);
             GMAP.affichageEdgeGraph(map);
             nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
@@ -215,6 +248,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == boutonVoisinage){
+            setVisible(false);
             GMAP.affichageNodeGraph(map);
             GMAP.affichageEdgeGraph(map);
             do {
@@ -235,14 +269,86 @@ public class GraphInterface extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == boutonComparaison){
+            setVisible(false);
             GMAP.affichageNodeGraph(map);
             GMAP.affichageEdgeGraph(map);
-            do{
-                nodeString3 = JOptionPane.showInputDialog("Choisissez un point du graphe");
-                if(GMAP.getNode(nodeString3) == null)
-                    JOptionPane.showMessageDialog(null,"Le point " + nodeString3 + " n'existe pas sur le graph !");
-            }while(GMAP.getNode(nodeString3) == null);
+            do {
+                nodeString3 = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                if (GMAP.getNode(nodeString3) == null)
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'existe pas sur le graph !");
+                if(!nodeString3.startsWith("V"))
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'est pas une ville !");
+            }while(GMAP.getNode(nodeString3) == null || !nodeString3.startsWith("V"));
+
+            do {
+                nodeString4 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                if (GMAP.getNode(nodeString4) == null)
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'existe pas sur le graph !");
+                if(nodeString3.equals(nodeString4))
+                    JOptionPane.showMessageDialog(null,"Les points sont identiques !");
+                if(!nodeString4.startsWith("V"))
+                    JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'est pas une ville !");
+            }while(GMAP.getNode(nodeString4) == null || nodeString3.equals(nodeString4) || !nodeString4.startsWith("V"));
+
+            ArrayList<String> voisin2DistancePoint1 = new ArrayList<>();
+            ArrayList<String> voisin2DistancePoint2 = new ArrayList<>();
+            voisin2DistancePoint1 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString3),map);
+            voisin2DistancePoint2 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString4), map);
+
             affichageComparaison();
+
+            for(Object i : voisin2DistancePoint1){
+                if(i.toString().startsWith("V")) {
+                    nbVillesPoint1++;
+                    villes2VoisinPoint1.addItem(i.toString());
+                }
+                else if(i.toString().startsWith("L")) {
+                    nbLoisirsPoint1++;
+                    loisirs2VoisinPoint1.addItem(i.toString());
+                }
+                else if(i.toString().startsWith("R")) {
+                    nbRestoPoint1++;
+                    restos2VoisinPoint1.addItem(i.toString());
+                }
+            }
+            for(Object j : voisin2DistancePoint2){
+                if(j.toString().startsWith("V")) {
+                    nbVillesPoint2++;
+                    villes2VoisinPoint2.addItem(j.toString());
+                }
+                else if(j.toString().startsWith("L")) {
+                    nbLoisirsPoint2++;
+                    loisirs2VoisinPoint2.addItem(j.toString());
+                }
+                else if(j.toString().startsWith("R")) {
+                    nbRestoPoint2++;
+                    restos2VoisinPoint2.addItem(j.toString());
+                }
+            }
+            if(nbVillesPoint1 > nbVillesPoint2)
+                plusMoinsOuverte.setText("La ville " + nodeString3 + " est plus ouverte que la ville " + nodeString4);
+            else if(nbVillesPoint1 < nbVillesPoint2)
+                plusMoinsOuverte.setText("La ville " + nodeString3 + " est moins ouverte que la ville " + nodeString4);
+            else
+                plusMoinsOuverte.setText("La ville " + nodeString3 + " est aussi ouverte que la ville " + nodeString4);
+
+            if(nbLoisirsPoint1 > nbLoisirsPoint2)
+                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est plus culturelle que la ville " + nodeString4);
+            else if(nbLoisirsPoint1 < nbLoisirsPoint2)
+                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est moins culturelle que la ville " + nodeString4);
+            else
+                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est aussi culturelle que la ville " + nodeString4);
+
+            if(nbRestoPoint1 > nbRestoPoint2)
+                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est plus gastronomique que la ville " + nodeString4);
+            else if(nbRestoPoint1 < nbRestoPoint2)
+                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est moins gastronomique que la ville " + nodeString4);
+            else
+                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est aussi gastronomique que la ville " + nodeString4);
+        }
+
+        if(e.getSource() == quitter) {
+            System.exit(0);
         }
     }
 
@@ -264,6 +370,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Eermeture de 1'appli.
         setContentPane(constrPan()); //méthode de construction du content pane
         setVisible(true);
+        quitter.addActionListener(this);
     }
 
     private JPanel constrPan(){
@@ -276,14 +383,22 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         p.add(Box.createVerticalGlue());
 
+        JPanel chargementFichier = new JPanel();
+        chargementFichier.setLayout(new FlowLayout());
+
         boutonChargement = new JButton("Chargement du GRAPHMAP");
         boutonChargement.addActionListener(this);
-        p.add(boutonChargement);
+        chargementFichier.add(boutonChargement);
+
+        boutonChargementGraphFourni = new JButton("Chargement avec GRAPHMAP fourni");
+        boutonChargementGraphFourni.addActionListener(this);
+        chargementFichier.add(boutonChargementGraphFourni);
+
+        p.add(chargementFichier);
 
         messageConfirmation = new JLabel("");
         p.add(messageConfirmation);
         messageConfirmation.setAlignmentX(CENTER_ALIGNMENT);
-        boutonChargement.setAlignmentX(CENTER_ALIGNMENT);
 
         p.add(Box.createVerticalGlue());
 
@@ -312,6 +427,11 @@ public class GraphInterface extends JFrame implements ActionListener {
         boutonComparaison.addActionListener(this);
         p.add(boutonComparaison);
         boutonComparaison.setAlignmentX(CENTER_ALIGNMENT);
+
+        p.add(Box.createVerticalGlue());
+
+        p.add(quitter);
+        quitter.setAlignmentX(CENTER_ALIGNMENT);
 
         p.add(Box.createVerticalGlue());
 
@@ -431,6 +551,8 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         voisin0.add(p,BorderLayout.CENTER);
 
+        voisin0.add(quitter,BorderLayout.SOUTH);
+
         return voisin0;
     }
 
@@ -477,17 +599,56 @@ public class GraphInterface extends JFrame implements ActionListener {
         comparaison.add(plusMoinsOuverte);
         plusMoinsOuverte.setAlignmentX(CENTER_ALIGNMENT);
 
+        JPanel showVilles = new JPanel();
+        showVilles.setLayout(new FlowLayout());
+
+        villes2VoisinPoint1 = new JComboBox<>();
+        villes2VoisinPoint1.addItem("Villes à 2 distance du point " + nodeString3);
+
+        villes2VoisinPoint2 = new JComboBox<>();
+        villes2VoisinPoint2.addItem("Villes à 2 distance du point " + nodeString4);
+
+        showVilles.add(villes2VoisinPoint1); showVilles.add(villes2VoisinPoint2);
+        showVilles.setAlignmentX(CENTER_ALIGNMENT);
+        comparaison.add(showVilles);
+
         comparaison.add(Box.createVerticalGlue());
 
         plusMoinsCulturelle = new JLabel("Gneugneu2");
         comparaison.add(plusMoinsCulturelle);
         plusMoinsCulturelle.setAlignmentX(CENTER_ALIGNMENT);
 
+        JPanel showLoisirs = new JPanel();
+        showLoisirs.setLayout(new FlowLayout());
+
+        loisirs2VoisinPoint1 = new JComboBox<>();
+        loisirs2VoisinPoint1.addItem("Centres de loisirs à 2 distance du point " + nodeString3);
+
+        loisirs2VoisinPoint2 = new JComboBox<>();
+        loisirs2VoisinPoint2.addItem("Centres de loisirs à 2 distance du point " + nodeString4);
+
+        showLoisirs.add(loisirs2VoisinPoint1); showLoisirs.add(loisirs2VoisinPoint2);
+        showLoisirs.setAlignmentX(CENTER_ALIGNMENT);
+        comparaison.add(showLoisirs);
+
         comparaison.add(Box.createVerticalGlue());
 
         plusMoinsGastronomique = new JLabel("Gneugneu3");
         comparaison.add(plusMoinsGastronomique);
         plusMoinsGastronomique.setAlignmentX(CENTER_ALIGNMENT);
+
+        JPanel showRestos = new JPanel();
+        showRestos.setLayout(new FlowLayout());
+
+        restos2VoisinPoint1 = new JComboBox<>();
+        restos2VoisinPoint1.addItem("Restaurants à 2 distance du point " + nodeString3);
+
+        restos2VoisinPoint2 = new JComboBox<>();
+        restos2VoisinPoint2.addItem("Restaurants à 2 distance du point " + nodeString4);
+
+        showRestos.add(restos2VoisinPoint1); showRestos.add(restos2VoisinPoint2);
+        showRestos.setAlignmentX(CENTER_ALIGNMENT);
+        comparaison.add(showRestos);
 
         comparaison.add(Box.createVerticalGlue());
 
@@ -521,6 +682,6 @@ public class GraphInterface extends JFrame implements ActionListener {
 
 
     public static void main(String[] args) {
-        GraphInterface test = new GraphInterface();
+        test = new GraphInterface();
     }
 }
