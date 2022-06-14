@@ -62,17 +62,21 @@ public class GRAPHMAP {
         System.setProperty("org.graphstream.ui", "swing");
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         graph.setAttribute("ui.stylesheet", "url('stylesheet')"); //On précise la feuille de style du graphe
+        String filename = s.toString();
 
-
-        LinkedHashMap map = new LinkedHashMap();
-        BufferedReader line = new BufferedReader(new FileReader(s));
-        String strng = line.readLine(); //Mise en place du lecteur de fichier
-        String[] split;
-        do {
-            split = strng.split(":");
-            map.put(split[0], split[1]);
-        } while (((strng = line.readLine()) != null));  //tant que le fichier n'est pas vide, on place le point d'origine (le premier de la ligne) en clé et ses voisins en valeur de la map
-        return map;
+        if(filename.endsWith(".csv")) {
+            LinkedHashMap map = new LinkedHashMap();
+            BufferedReader line = new BufferedReader(new FileReader(s));
+            String strng = line.readLine(); //Mise en place du lecteur de fichier
+            String[] split;
+            do {
+                split = strng.split(":");
+                map.put(split[0], split[1]);
+            } while (((strng = line.readLine()) != null));  //tant que le fichier n'est pas vide, on place le point d'origine (le premier de la ligne) en clé et ses voisins en valeur de la map
+            return map;
+        }
+        else
+            return null;
     }
 
 

@@ -115,7 +115,7 @@ public class GraphInterface extends JFrame implements ActionListener {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            if(!map.isEmpty()) {
+            if(map != null) {
                 setMessageConfirmation("Chargement réussi !");
                 bouton0Distance.setEnabled(true);
                 if(isPanel1VoisinComputed)
@@ -377,26 +377,33 @@ public class GraphInterface extends JFrame implements ActionListener {
             }
             do {
                 nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
-                if (GMAP.getNode(nodeString) == null)
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
-            }while(GMAP.getNode(nodeString) == null);
-            try {
-                map = GMAP.lectureFichier(s);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            if (!isPanel1VoisinComputed) {
-                panel1Voisin = GMAP.affichage1Voisin(GMAP.getNode(nodeString), map);
-                voisin1.remove(lastPanelUsed);
-                lastPanelUsed = panel1Voisin;
-                voisin1.add(panel1Voisin);
-                isPanel1VoisinComputed = true;
-                panel1Voisin.updateUI();
-            }
-            else{
-                lastPanelUsed = panel1Voisin;
-                voisin1.add(panel1Voisin);
-                panel1Voisin.updateUI();
+                if(nodeString == null){
+                    voisin1.dispose();
+                    test = new GraphInterface();
+                }
+                else {
+                    if (GMAP.getNode(nodeString) == null)
+                        JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
+                }
+            }while(GMAP.getNode(nodeString) == null && nodeString != null);
+            if(nodeString != null) {
+                try {
+                    map = GMAP.lectureFichier(s);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if (!isPanel1VoisinComputed) {
+                    panel1Voisin = GMAP.affichage1Voisin(GMAP.getNode(nodeString), map);
+                    voisin1.remove(lastPanelUsed);
+                    lastPanelUsed = panel1Voisin;
+                    voisin1.add(panel1Voisin);
+                    isPanel1VoisinComputed = true;
+                    panel1Voisin.updateUI();
+                } else {
+                    lastPanelUsed = panel1Voisin;
+                    voisin1.add(panel1Voisin);
+                    panel1Voisin.updateUI();
+                }
             }
         }
 
@@ -474,31 +481,46 @@ public class GraphInterface extends JFrame implements ActionListener {
             }
             do {
                 nodeString = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
-                if (GMAP.getNode(nodeString) == null)
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
-            } while (GMAP.getNode(nodeString) == null);
+                if(nodeString == null){
+                    affichageVoisinage.dispose();
+                    test = new GraphInterface();
+                }
+                else {
+                    if (GMAP.getNode(nodeString) == null)
+                        JOptionPane.showMessageDialog(null, "Le point " + nodeString + " n'existe pas sur le graph !");
+                }
+            } while (GMAP.getNode(nodeString) == null && nodeString != null);
 
-            do {
-                nodeString2 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
-                if (GMAP.getNode(nodeString2) == null)
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString2 + " n'existe pas sur le graph !");
-                if (nodeString.equals(nodeString2))
-                    JOptionPane.showMessageDialog(null, "Les points sont identiques !");
-            } while (GMAP.getNode(nodeString2) == null || nodeString.equals(nodeString2));
+            if(nodeString != null) {
+                do {
+                    nodeString2 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                    if(nodeString2 == null){
+                        affichageVoisinage.dispose();
+                        test = new GraphInterface();
+                    }
+                    else {
+                        if (GMAP.getNode(nodeString2) == null)
+                            JOptionPane.showMessageDialog(null, "Le point " + nodeString2 + " n'existe pas sur le graph !");
+                        if (nodeString.equals(nodeString2))
+                            JOptionPane.showMessageDialog(null, "Les points sont identiques !");
+                    }
+                } while (nodeString2 != null && GMAP.getNode(nodeString2) == null || nodeString.equals(nodeString2));
 
-            if (!isPanelVoisinageComputed){
-                panelVoisinage = GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2), map);
-                voisinage.remove(lastPanelUsed);
-                lastPanelUsed = panelVoisinage;
-                voisinage.add(panelVoisinage);
-                panelVoisinage.updateUI();
-                isPanelVoisinageComputed = true;
-            }
-            else{
-                voisinage.remove(lastPanelUsed);
-                lastPanelUsed = panelVoisinage;
-                voisinage.add(panelVoisinage);
-                panelVoisinage.updateUI();
+                if(nodeString2 != null) {
+                    if (!isPanelVoisinageComputed) {
+                        panelVoisinage = GMAP.affichage2Distance(GMAP.getNode(nodeString), GMAP.getNode(nodeString2), map);
+                        voisinage.remove(lastPanelUsed);
+                        lastPanelUsed = panelVoisinage;
+                        voisinage.add(panelVoisinage);
+                        panelVoisinage.updateUI();
+                        isPanelVoisinageComputed = true;
+                    } else {
+                        voisinage.remove(lastPanelUsed);
+                        lastPanelUsed = panelVoisinage;
+                        voisinage.add(panelVoisinage);
+                        panelVoisinage.updateUI();
+                    }
+                }
             }
         }
         if(e.getSource() == retourVoisinage){
@@ -978,14 +1000,11 @@ public class GraphInterface extends JFrame implements ActionListener {
 
     public String getPath()
     {
-        String chemin="";
-        JFileChooser chooser = new JFileChooser();
-        chooser.setApproveButtonText("Choix du fichier ...");
-        if(chooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
-        {
-            chemin = chooser.getSelectedFile().getAbsolutePath();
-        }
-        return chemin;
+        FileDialog fd = new FileDialog(new Frame(), "Sélectionnez votre fichier...", FileDialog.LOAD);
+        fd.setFile("*.csv");
+        fd.setVisible(true);
+        String nomFic = ((fd.getDirectory()).concat(fd.getFile()));
+        return nomFic;
     }
 
 
