@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,6 +69,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JButton retour0Voisin = new JButton("Retour");
     private static JButton retour1Voisin = new JButton("Retour");
     private static JButton retourVoisinage = new JButton("Retour");
+    private static JButton retourComparaison = new JButton("Retour");
     private static JButton quitter = new JButton("Quitter");
     private static GraphInterface test;
     private static JPanel panelGraph0Voisin;
@@ -102,6 +104,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JFrame affichageVoisinage;
     private static JFrame affichageChoixPoint;
     private static JPanel panelChoixPoint;
+    private static JFrame affichageComparaison;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -461,10 +464,13 @@ public class GraphInterface extends JFrame implements ActionListener {
                 lastPanelUsed = panelGraph0Voisin;
                 voisinage.add(panelGraph0Voisin);
                 isPanelGraph0VoisinComputed = true;
+                voisinage.updateUI();
             }
             else{
                 lastPanelUsed = panelGraph0Voisin;
                 voisinage.add(panelGraph0Voisin);
+                voisinage.updateUI();
+                panelGraph0Voisin.updateUI();
             }
             do {
                 nodeString = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
@@ -500,23 +506,25 @@ public class GraphInterface extends JFrame implements ActionListener {
             test = new GraphInterface();
         }
 
+
+
+
         if(e.getSource() == boutonComparaison){
             setVisible(false);
+            comparaisonChoixPoint();
+
             if (!isPanelGraph0VoisinComputed) {
                 panelGraph0Voisin = GMAP.affichageNodeGraph(map);
                 GMAP.affichageEdgeGraph(map);
                 lastPanelUsed = panelGraph0Voisin;
-                comparaisonChoixPoint();
-                affichageChoixPoint.add(panelChoixPoint);
-                panelChoixPoint = panelGraph0Voisin;
-                affichageChoixPoint.add(panelChoixPoint);
+                affichageChoixPoint.add(panelGraph0Voisin);
                 isPanelGraph0VoisinComputed = true;
+                panelGraph0Voisin.updateUI();
             }
             else{
                 lastPanelUsed = panelGraph0Voisin;
-                comparaisonChoixPoint();
-                panelChoixPoint = panelGraph0Voisin;
-                affichageChoixPoint.add(panelChoixPoint);
+                affichageChoixPoint.add(panelGraph0Voisin);
+                panelGraph0Voisin.updateUI();
             }
             do {
                 nodeString3 = JOptionPane.showInputDialog("Choisissez la première ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
@@ -543,7 +551,6 @@ public class GraphInterface extends JFrame implements ActionListener {
             voisin2DistancePoint2 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString4), map);
 
             affichageComparaison();
-
             for(Object i : voisin2DistancePoint1){
                 if(i.toString().startsWith("V")) {
                     nbVillesPoint1++;
@@ -592,6 +599,19 @@ public class GraphInterface extends JFrame implements ActionListener {
                 plusMoinsGastronomique.setText("La ville " + nodeString3 + " est moins gastronomique que la ville " + nodeString4);
             else
                 plusMoinsGastronomique.setText("La ville " + nodeString3 + " est aussi gastronomique que la ville " + nodeString4);
+        }
+        if(e.getSource() == retourComparaison){
+            affichageComparaison.setVisible(false);
+
+            nbVillesPoint1 = 0;
+            nbVillesPoint2 = 0;
+            nbLoisirsPoint1 = 0;
+            nbLoisirsPoint2 = 0;
+            nbRestoPoint1 = 0;
+            nbRestoPoint2 = 0;
+
+
+            test = new GraphInterface();
         }
 
         if(e.getSource() == quitter) {
@@ -858,7 +878,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     }
 
     private JFrame affichageComparaison(){
-        JFrame affichageComparaison = new JFrame();
+        affichageComparaison = new JFrame();
 
         JPanel comparaison = new JPanel();
         comparaison.setLayout(new BoxLayout(comparaison,BoxLayout.Y_AXIS));
@@ -922,6 +942,9 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         comparaison.add(Box.createVerticalGlue());
 
+        comparaison.add(retourComparaison);
+        retourComparaison.addActionListener(this);
+
         affichageComparaison.setTitle("Affichage comparaison à 2 distance");
         affichageComparaison.setSize(1300, 700); //taille
         affichageComparaison.setLocationRelativeTo(null); //centrage
@@ -937,8 +960,6 @@ public class GraphInterface extends JFrame implements ActionListener {
     private JFrame comparaisonChoixPoint(){
         affichageChoixPoint = new JFrame();
         panelChoixPoint = new JPanel();
-
-        affichageChoixPoint.add(panelChoixPoint);
 
         affichageChoixPoint.setTitle("Affichage comparaison 2 distance - choix des points");
         affichageChoixPoint.setSize(800, 500); //taille
