@@ -1,5 +1,6 @@
+package GRAMA;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -719,11 +720,11 @@ public class GraphInterface extends JFrame implements ActionListener {
         JPanel chargementFichier = new JPanel();
         chargementFichier.setLayout(new FlowLayout());
 
-        boutonChargement = new JButton("Chargement du GRAPHMAP");
+        boutonChargement = new JButton("Chargement du GRAMA.GRAPHMAP");
         boutonChargement.addActionListener(this);
         chargementFichier.add(boutonChargement);
 
-        boutonChargementGraphFourni = new JButton("Chargement avec GRAPHMAP fourni");
+        boutonChargementGraphFourni = new JButton("Chargement avec GRAMA.GRAPHMAP fourni");
         boutonChargementGraphFourni.addActionListener(this);
         chargementFichier.add(boutonChargementGraphFourni);
 

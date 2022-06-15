@@ -1,3 +1,7 @@
+package GRAMA;
+
+import GRAMA.GraphInterface;
+
 import javax.swing.*;
 
 /**
