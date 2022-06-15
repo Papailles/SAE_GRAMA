@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+/**
+ * Classe qui gère les interfaces relatives à l'application
+ * @author Giani VERRELLI - G2S2
+ * @version 2.0
+ */
 public class GraphInterface extends JFrame implements ActionListener {
 
     private GRAPHMAP GMAP;
@@ -70,6 +75,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JButton retour1Voisin = new JButton("Retour");
     private static JButton retourVoisinage = new JButton("Retour");
     private static JButton retourComparaison = new JButton("Retour");
+    private static JButton boutonAffichageGraph = new JButton("Afficher le graph entier");
     private static JButton quitter = new JButton("Quitter");
     private static GraphInterface test;
     private static JPanel panelGraph0Voisin;
@@ -106,6 +112,9 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JPanel panelChoixPoint;
     private static JFrame affichageComparaison;
 
+    /**
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == boutonChargement){
@@ -128,9 +137,13 @@ public class GraphInterface extends JFrame implements ActionListener {
                     boutonVoisinage.setEnabled(true);
                 boutonComparaison.setEnabled(true);
             }
-            else
+            else {
                 setMessageConfirmation("Chargement échoué !");
-
+                bouton0Distance.setEnabled(false);
+                bouton1Distance.setEnabled(false);
+                boutonComparaison.setEnabled(false);
+                boutonVoisinage.setEnabled(false);
+            }
         }
         if(e.getSource() == boutonChargementGraphFourni){
             s = new File("src/testgraph2.csv");
@@ -185,6 +198,13 @@ public class GraphInterface extends JFrame implements ActionListener {
             nombreAutoroutes.setEnabled(false);
             nombreDepartementales.setEnabled(false);
             nombreNationales.setEnabled(false);
+        }
+
+        if(e.getSource() == boutonAffichageGraph){
+            panel0Voisin.remove(lastPanelUsed);
+            lastPanelUsed = panelGraph0Voisin;
+            panel0Voisin.add(panelGraph0Voisin);
+            panel0Voisin.updateUI();
         }
 
         if(e.getSource() == villes){
@@ -299,34 +319,39 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         if(e.getSource() == listerParVilles){
             ArrayList<String> list = GMAP.getVilles();
-            for(String i : list){
+            for(String i : list)
                 boxVilles.addItem(i);
-            }
+            boxVilles.setVisible(true);
         }
         if(e.getSource() == listerParLoisirs){
             ArrayList<String> list = GMAP.getLoisirs();
             for(String i : list)
                 boxLoisirs.addItem(i);
+            boxLoisirs.setVisible(true);
         }
         if(e.getSource() == listerParResto){
             ArrayList<String> list = GMAP.getResto();
             for(String i : list)
                 boxResto.addItem(i);
+            boxResto.setVisible(true);
         }
         if(e.getSource() == listerParAutoroutes){
             ArrayList<String> list = GMAP.getAutoroutes();
             for(String i : list)
                 boxAutoroutes.addItem(i);
+            boxAutoroutes.setVisible(true);
         }
         if(e.getSource() == listerParDepartementales){
             ArrayList<String> list = GMAP.getDepartementales();
             for(String i : list)
                 boxDepartementales.addItem(i);
+            boxDepartementales.setVisible(true);
         }
         if(e.getSource() == listerParNationales){
             ArrayList<String> list = GMAP.getNationales();
             for(String i : list)
                 boxNationales.addItem(i);
+            boxNationales.setVisible(true);
         }
 
         if(e.getSource() == nombreVilles){
@@ -531,7 +556,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
 
 
-        if(e.getSource() == boutonComparaison){
+        if(e.getSource() == boutonComparaison) {
             setVisible(false);
             comparaisonChoixPoint();
 
@@ -542,85 +567,95 @@ public class GraphInterface extends JFrame implements ActionListener {
                 affichageChoixPoint.add(panelGraph0Voisin);
                 isPanelGraph0VoisinComputed = true;
                 panelGraph0Voisin.updateUI();
-            }
-            else{
+            } else {
                 lastPanelUsed = panelGraph0Voisin;
                 affichageChoixPoint.add(panelGraph0Voisin);
                 panelGraph0Voisin.updateUI();
             }
             do {
                 nodeString3 = JOptionPane.showInputDialog("Choisissez la première ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
-                if (GMAP.getNode(nodeString3) == null)
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'existe pas sur le graph !");
-                if(!nodeString3.startsWith("V"))
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'est pas une ville !");
-            }while(GMAP.getNode(nodeString3) == null || !nodeString3.startsWith("V"));
-
-            do {
-                nodeString4 = JOptionPane.showInputDialog("Choisissez la deuxième ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
-                if (GMAP.getNode(nodeString4) == null)
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'existe pas sur le graph !");
-                if(nodeString3.equals(nodeString4))
-                    JOptionPane.showMessageDialog(null,"Les points sont identiques !");
-                if(!nodeString4.startsWith("V"))
-                    JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'est pas une ville !");
-            }while(GMAP.getNode(nodeString4) == null || nodeString3.equals(nodeString4) || !nodeString4.startsWith("V"));
-
-            affichageChoixPoint.setVisible(false);
-            ArrayList<String> voisin2DistancePoint1 = new ArrayList<>();
-            ArrayList<String> voisin2DistancePoint2 = new ArrayList<>();
-            voisin2DistancePoint1 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString3),map);
-            voisin2DistancePoint2 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString4), map);
-
-            affichageComparaison();
-            for(Object i : voisin2DistancePoint1){
-                if(i.toString().startsWith("V")) {
-                    nbVillesPoint1++;
-                    villes2VoisinPoint1.addItem(i.toString());
+                if (nodeString3 == null) {
+                    affichageChoixPoint.dispose();
+                    test = new GraphInterface();
+                    break;
+                } else {
+                    if (GMAP.getNode(nodeString3) == null)
+                        JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'existe pas sur le graph !");
+                    if (!nodeString3.startsWith("V"))
+                        JOptionPane.showMessageDialog(null, "Le point " + nodeString3 + " n'est pas une ville !");
                 }
-                else if(i.toString().startsWith("L")) {
-                    nbLoisirsPoint1++;
-                    loisirs2VoisinPoint1.addItem(i.toString());
-                }
-                else if(i.toString().startsWith("R")) {
-                    nbRestoPoint1++;
-                    restos2VoisinPoint1.addItem(i.toString());
+            } while (nodeString3 != null && GMAP.getNode(nodeString3) == null || !nodeString3.startsWith("V"));
+            if(nodeString3 != null) {
+                do {
+                    nodeString4 = JOptionPane.showInputDialog("Choisissez la deuxième ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
+                    if (nodeString4 == null) {
+                        affichageChoixPoint.dispose();
+                        test = new GraphInterface();
+                        break;
+                    } else {
+                        if (GMAP.getNode(nodeString4) == null)
+                            JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'existe pas sur le graph !");
+                        if (nodeString3.equals(nodeString4))
+                            JOptionPane.showMessageDialog(null, "Les points sont identiques !");
+                        if (!nodeString4.startsWith("V"))
+                            JOptionPane.showMessageDialog(null, "Le point " + nodeString4 + " n'est pas une ville !");
+                    }
+                } while (nodeString4 != null && GMAP.getNode(nodeString4) == null || nodeString3.equals(nodeString4) || !nodeString4.startsWith("V"));
+
+                if (nodeString4 != null) {
+                    affichageChoixPoint.setVisible(false);
+                    ArrayList<String> voisin2DistancePoint1 = new ArrayList<>();
+                    ArrayList<String> voisin2DistancePoint2 = new ArrayList<>();
+                    voisin2DistancePoint1 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString3), map);
+                    voisin2DistancePoint2 = GMAP.getVoisin2Distance(GMAP.getNode(nodeString4), map);
+
+                    affichageComparaison();
+                    for (Object i : voisin2DistancePoint1) {
+                        if (i.toString().startsWith("V")) {
+                            nbVillesPoint1++;
+                            villes2VoisinPoint1.addItem(i.toString());
+                        } else if (i.toString().startsWith("L")) {
+                            nbLoisirsPoint1++;
+                            loisirs2VoisinPoint1.addItem(i.toString());
+                        } else if (i.toString().startsWith("R")) {
+                            nbRestoPoint1++;
+                            restos2VoisinPoint1.addItem(i.toString());
+                        }
+                    }
+                    for (Object j : voisin2DistancePoint2) {
+                        if (j.toString().startsWith("V")) {
+                            nbVillesPoint2++;
+                            villes2VoisinPoint2.addItem(j.toString());
+                        } else if (j.toString().startsWith("L")) {
+                            nbLoisirsPoint2++;
+                            loisirs2VoisinPoint2.addItem(j.toString());
+                        } else if (j.toString().startsWith("R")) {
+                            nbRestoPoint2++;
+                            restos2VoisinPoint2.addItem(j.toString());
+                        }
+                    }
+                    if (nbVillesPoint1 > nbVillesPoint2)
+                        plusMoinsOuverte.setText("La ville " + nodeString3 + " est plus ouverte que la ville " + nodeString4);
+                    else if (nbVillesPoint1 < nbVillesPoint2)
+                        plusMoinsOuverte.setText("La ville " + nodeString3 + " est moins ouverte que la ville " + nodeString4);
+                    else
+                        plusMoinsOuverte.setText("La ville " + nodeString3 + " est aussi ouverte que la ville " + nodeString4);
+
+                    if (nbLoisirsPoint1 > nbLoisirsPoint2)
+                        plusMoinsCulturelle.setText("La ville " + nodeString3 + " est plus culturelle que la ville " + nodeString4);
+                    else if (nbLoisirsPoint1 < nbLoisirsPoint2)
+                        plusMoinsCulturelle.setText("La ville " + nodeString3 + " est moins culturelle que la ville " + nodeString4);
+                    else
+                        plusMoinsCulturelle.setText("La ville " + nodeString3 + " est aussi culturelle que la ville " + nodeString4);
+
+                    if (nbRestoPoint1 > nbRestoPoint2)
+                        plusMoinsGastronomique.setText("La ville " + nodeString3 + " est plus gastronomique que la ville " + nodeString4);
+                    else if (nbRestoPoint1 < nbRestoPoint2)
+                        plusMoinsGastronomique.setText("La ville " + nodeString3 + " est moins gastronomique que la ville " + nodeString4);
+                    else
+                        plusMoinsGastronomique.setText("La ville " + nodeString3 + " est aussi gastronomique que la ville " + nodeString4);
                 }
             }
-            for(Object j : voisin2DistancePoint2){
-                if(j.toString().startsWith("V")) {
-                    nbVillesPoint2++;
-                    villes2VoisinPoint2.addItem(j.toString());
-                }
-                else if(j.toString().startsWith("L")) {
-                    nbLoisirsPoint2++;
-                    loisirs2VoisinPoint2.addItem(j.toString());
-                }
-                else if(j.toString().startsWith("R")) {
-                    nbRestoPoint2++;
-                    restos2VoisinPoint2.addItem(j.toString());
-                }
-            }
-            if(nbVillesPoint1 > nbVillesPoint2)
-                plusMoinsOuverte.setText("La ville " + nodeString3 + " est plus ouverte que la ville " + nodeString4);
-            else if(nbVillesPoint1 < nbVillesPoint2)
-                plusMoinsOuverte.setText("La ville " + nodeString3 + " est moins ouverte que la ville " + nodeString4);
-            else
-                plusMoinsOuverte.setText("La ville " + nodeString3 + " est aussi ouverte que la ville " + nodeString4);
-
-            if(nbLoisirsPoint1 > nbLoisirsPoint2)
-                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est plus culturelle que la ville " + nodeString4);
-            else if(nbLoisirsPoint1 < nbLoisirsPoint2)
-                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est moins culturelle que la ville " + nodeString4);
-            else
-                plusMoinsCulturelle.setText("La ville " + nodeString3 + " est aussi culturelle que la ville " + nodeString4);
-
-            if(nbRestoPoint1 > nbRestoPoint2)
-                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est plus gastronomique que la ville " + nodeString4);
-            else if(nbRestoPoint1 < nbRestoPoint2)
-                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est moins gastronomique que la ville " + nodeString4);
-            else
-                plusMoinsGastronomique.setText("La ville " + nodeString3 + " est aussi gastronomique que la ville " + nodeString4);
         }
         if(e.getSource() == retourComparaison){
             affichageComparaison.setVisible(false);
@@ -641,6 +676,9 @@ public class GraphInterface extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Permet de générer l'application
+     */
     public GraphInterface() {
         super();
         GMAP = new GRAPHMAP();
@@ -651,6 +689,9 @@ public class GraphInterface extends JFrame implements ActionListener {
         boutonVoisinage.setEnabled(false);
     }
 
+    /**
+     * Gère l'affichage de la fenêtre principale
+     */
     private void constrFen(){
         setTitle("Graph Map Analysis"); //mise en oeuvze du titre
         setSize(1000, 500); //taille
@@ -662,6 +703,9 @@ public class GraphInterface extends JFrame implements ActionListener {
         quitter.addActionListener(this);
     }
 
+    /**
+     * @return JPanel du menu principal
+     */
     private JPanel constrPan(){
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p,BoxLayout.Y_AXIS));
@@ -727,6 +771,9 @@ public class GraphInterface extends JFrame implements ActionListener {
         return p;
     }
 
+    /**
+     * @return JFrame du menu affichage0Voisin
+     */
     private JFrame affichage0Voisin(){
         voisin0 = new JFrame();
         voisin0.setLayout(new BorderLayout());
@@ -808,44 +855,57 @@ public class GraphInterface extends JFrame implements ActionListener {
         voisin0.setSize(1300, 700); //taille
         voisin0.setLocationRelativeTo(null); //centrage
         voisin0.setResizable(false); //non redimensionnable
-        voisin0.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        voisin0.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //Fermeture de 1'appli.
         voisin0.setVisible(true);
 
         panel0Voisin = new JPanel();
         panel0Voisin.setLayout(new FlowLayout());
 
         boxVilles = new JComboBox();
-        boxVilles.addItem("VILLES");
+        boxVilles.addItem("LISTE DES VILLES");
+        boxVilles.setVisible(false);
         panel0Voisin.add(boxVilles);
 
         boxLoisirs = new JComboBox();
-        boxLoisirs.addItem("CENTRES DE LOISIRS");
+        boxLoisirs.addItem("LISTE DES CENTRES DE LOISIRS");
+        boxLoisirs.setVisible(false);
         panel0Voisin.add(boxLoisirs);
 
         boxResto = new JComboBox();
-        boxResto.addItem("RESTAURANTS");
+        boxResto.addItem("LISTE DES RESTAURANTS");
+        boxResto.setVisible(false);
         panel0Voisin.add(boxResto);
 
         boxAutoroutes = new JComboBox();
-        boxAutoroutes.addItem("AUTOROUTES");
+        boxAutoroutes.addItem("LISTE DES AUTOROUTES");
+        boxAutoroutes.setVisible(false);
         panel0Voisin.add(boxAutoroutes);
 
         boxDepartementales = new JComboBox();
-        boxDepartementales.addItem("DEPARTEMENTALES");
+        boxDepartementales.addItem("LISTE DES DEPARTEMENTALES");
+        boxDepartementales.setVisible(false);
         panel0Voisin.add(boxDepartementales);
 
         boxNationales = new JComboBox();
-        boxNationales.addItem("NATIONALES");
+        boxNationales.addItem("LISTE DES NATIONALES");
+        boxNationales.setVisible(false);
         panel0Voisin.add(boxNationales);
 
         voisin0.add(panel0Voisin,BorderLayout.CENTER);
 
+        voisin0.add(boutonAffichageGraph,BorderLayout.NORTH);
+        boutonAffichageGraph.addActionListener(this);
+
         voisin0.add(retour0Voisin,BorderLayout.SOUTH);
         retour0Voisin.addActionListener(this);
+
 
         return voisin0;
     }
 
+    /**
+     * @return JFrame du menu affichage1Voisin
+     */
     private JFrame affichage1Voisin(){
         voisin1 = new JFrame();
         voisin1.setLayout(new BorderLayout());
@@ -871,7 +931,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         voisin1.setSize(1300, 700); //taille
         voisin1.setLocationRelativeTo(null); //centrage
         voisin1.setResizable(false); //non redimensionnable
-        voisin1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        voisin1.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //Fermeture de 1'appli.
         voisin1.setVisible(true);
 
         voisin1.add(retour1Voisin,BorderLayout.SOUTH);
@@ -880,6 +940,9 @@ public class GraphInterface extends JFrame implements ActionListener {
         return voisin1;
     }
 
+    /**
+     * @return JFrame du menu affichageVoisinage
+     */
     private JFrame affichageVoisinage(){
         affichageVoisinage = new JFrame();
         voisinage = new JPanel(new BorderLayout());
@@ -893,12 +956,15 @@ public class GraphInterface extends JFrame implements ActionListener {
         affichageVoisinage.setSize(1300, 700); //taille
         affichageVoisinage.setLocationRelativeTo(null); //centrage
         affichageVoisinage.setResizable(false); //non redimensionnable
-        affichageVoisinage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageVoisinage.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //Fermeture de 1'appli.
         affichageVoisinage.setVisible(true);
 
         return affichageVoisinage;
     }
 
+    /**
+     * @return JFrame du menu affichageComparaison
+     */
     private JFrame affichageComparaison(){
         affichageComparaison = new JFrame();
 
@@ -965,13 +1031,14 @@ public class GraphInterface extends JFrame implements ActionListener {
         comparaison.add(Box.createVerticalGlue());
 
         comparaison.add(retourComparaison);
+        retourComparaison.setAlignmentX(CENTER_ALIGNMENT);
         retourComparaison.addActionListener(this);
 
         affichageComparaison.setTitle("Affichage comparaison à 2 distance");
         affichageComparaison.setSize(1300, 700); //taille
         affichageComparaison.setLocationRelativeTo(null); //centrage
         affichageComparaison.setResizable(false); //non redimensionnable
-        affichageComparaison.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageComparaison.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //Fermeture de 1'appli.
         affichageComparaison.setVisible(true);
 
         affichageComparaison.add(comparaison);
@@ -979,36 +1046,46 @@ public class GraphInterface extends JFrame implements ActionListener {
         return affichageComparaison;
     }
 
+    /**
+     * @return JFrame du menu choix des points
+     */
     private JFrame comparaisonChoixPoint(){
         affichageChoixPoint = new JFrame();
         panelChoixPoint = new JPanel();
 
         affichageChoixPoint.setTitle("Affichage comparaison 2 distance - choix des points");
-        affichageChoixPoint.setSize(800, 500); //taille
+        affichageChoixPoint.setSize(1000, 600); //taille
         affichageChoixPoint.setLocationRelativeTo(null); //centrage
         affichageChoixPoint.setResizable(false); //non redimensionnable
-        affichageChoixPoint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Fermeture de 1'appli.
+        affichageChoixPoint.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //Fermeture de 1'appli.
         affichageChoixPoint.setVisible(true);
 
         return affichageChoixPoint;
     }
 
 
+    /**
+     * @param newMessageConfirmation
+     * Change le texte de confirmation du chargement du graph
+     */
     public void setMessageConfirmation(String newMessageConfirmation){
         messageConfirmation.setText(newMessageConfirmation);
     }
 
-    public String getPath()
-    {
+    /**
+     * @return Le chemin absolu du fichier choisi dans l'interface graphique
+     */
+    public String getPath() {
         FileDialog fd = new FileDialog(new Frame(), "Sélectionnez votre fichier...", FileDialog.LOAD);
+        String nomFic = new String();
         fd.setFile("*.csv");
         fd.setVisible(true);
-        String nomFic = ((fd.getDirectory()).concat(fd.getFile()));
+        if(fd.getFile() == null){
+            nomFic = "Annuler";
+        }
+        else {
+            nomFic = ((fd.getDirectory()).concat(fd.getFile()));
+        }
         return nomFic;
-    }
-
-
-    public static void main(String[] args) {
-        test = new GraphInterface();
     }
 }
