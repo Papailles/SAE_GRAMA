@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"GRAMA","l":"GraphInterface"},{"p":"GRAMA","l":"GRAPHMAP"},{"p":"GRAMA","l":"runInterface"}];updateSearchResults();
