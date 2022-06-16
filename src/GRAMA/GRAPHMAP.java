@@ -88,6 +88,8 @@ public class GRAPHMAP {
      */
     public JPanel affichageNodeGraph(LinkedHashMap map) {
 
+        Node node;
+
         Layout graphLayout = new SpringBox(false);
         SwingViewer viewer = new SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
 
@@ -101,6 +103,13 @@ public class GRAPHMAP {
         for (Object i : map.keySet()) { //On récupère toutes les clés
             mot = i.toString();
             graph.addNode(mot); //On ajoute le point qui correspond à la clé
+            node = graph.getNode(mot);
+            if(mot.startsWith("V"))
+                node.setAttribute("ui.color",Color.BLUE);
+            else if(mot.startsWith("L"))
+                node.setAttribute("ui.color",Color.RED);
+            else if(mot.startsWith("R"))
+                node.setAttribute("ui.color",Color.GREEN);
             sprite = sman.addSprite(mot); //On ajoute un "sprite" (ici une zone de texte)...
             sprite.setAttribute("ui.label", mot); //Le label du point est donc son nom
             sprite.attachToNode(mot); //... qu'on vient "attacher" au point créé

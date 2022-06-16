@@ -1,6 +1,7 @@
 node {
     size: 15px, 15px;
-    fill-color: red;
+    fill-mode: dyn-plain;
+    fill-color: black,green,red,blue;
     stroke-mode: plain;
     z-index: 4;
 }
