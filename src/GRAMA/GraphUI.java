@@ -14,9 +14,9 @@ import java.util.LinkedHashMap;
  * @author Giani VERRELLI - G2S2
  * @version 2.0
  */
-public class GraphInterface extends JFrame implements ActionListener {
+public class GraphUI extends JFrame implements ActionListener {
 
-    private GRAPHMAP GMAP;
+    private GraphAlgo GMAP;
     private JButton boutonChargement;
     private JButton boutonChargementGraphFourni;
     private JButton bouton0Distance;
@@ -78,7 +78,7 @@ public class GraphInterface extends JFrame implements ActionListener {
     private static JButton retourComparaison = new JButton("Retour");
     private static JButton boutonAffichageGraph = new JButton("Afficher le graph entier");
     private static JButton quitter = new JButton("Quitter");
-    private static GraphInterface test;
+    private static GraphUI test;
     private static JPanel panelGraph0Voisin;
     private static JPanel panel0Voisin;
     private static JPanel lastPanelUsed;
@@ -382,7 +382,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         if(e.getSource() == retour0Voisin){
             voisin0.setVisible(false);
-            test = new GraphInterface();
+            test = new GraphUI();
         }
 
 
@@ -405,7 +405,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                 nodeString = JOptionPane.showInputDialog("Choisissez un point du graph (liste disponible dans l'analyse 0 distance)");
                 if(nodeString == null){
                     voisin1.dispose();
-                    test = new GraphInterface();
+                    test = new GraphUI();
                 }
                 else {
                     if (GMAP.getNode(nodeString) == null)
@@ -484,7 +484,7 @@ public class GraphInterface extends JFrame implements ActionListener {
 
         if(e.getSource() == retour1Voisin){
             voisin1.setVisible(false);
-            test = new GraphInterface();
+            test = new GraphUI();
         }
 
         if(e.getSource() == boutonVoisinage) {
@@ -509,7 +509,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                 nodeString = JOptionPane.showInputDialog("Choisissez le premier point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                 if(nodeString == null){
                     affichageVoisinage.dispose();
-                    test = new GraphInterface();
+                    test = new GraphUI();
                 }
                 else {
                     if (GMAP.getNode(nodeString) == null)
@@ -522,7 +522,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                     nodeString2 = JOptionPane.showInputDialog("Choisissez le deuxième point parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                     if(nodeString2 == null){
                         affichageVoisinage.dispose();
-                        test = new GraphInterface();
+                        test = new GraphUI();
                     }
                     else {
                         if (GMAP.getNode(nodeString2) == null)
@@ -551,7 +551,7 @@ public class GraphInterface extends JFrame implements ActionListener {
         }
         if(e.getSource() == retourVoisinage){
             affichageVoisinage.setVisible(false);
-            test = new GraphInterface();
+            test = new GraphUI();
         }
 
 
@@ -577,7 +577,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                 nodeString3 = JOptionPane.showInputDialog("Choisissez la première ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                 if (nodeString3 == null) {
                     affichageChoixPoint.dispose();
-                    test = new GraphInterface();
+                    test = new GraphUI();
                     break;
                 } else {
                     if (GMAP.getNode(nodeString3) == null)
@@ -591,7 +591,7 @@ public class GraphInterface extends JFrame implements ActionListener {
                     nodeString4 = JOptionPane.showInputDialog("Choisissez la deuxième ville parmi les points du graph (liste disponible dans l'analyse 0 distance)");
                     if (nodeString4 == null) {
                         affichageChoixPoint.dispose();
-                        test = new GraphInterface();
+                        test = new GraphUI();
                         break;
                     } else {
                         if (GMAP.getNode(nodeString4) == null)
@@ -669,7 +669,7 @@ public class GraphInterface extends JFrame implements ActionListener {
             nbRestoPoint2 = 0;
 
 
-            test = new GraphInterface();
+            test = new GraphUI();
         }
 
         if(e.getSource() == quitter) {
@@ -680,9 +680,9 @@ public class GraphInterface extends JFrame implements ActionListener {
     /**
      * Permet de générer l'application
      */
-    public GraphInterface() {
+    public GraphUI() {
         super();
-        GMAP = new GRAPHMAP();
+        GMAP = new GraphAlgo();
         constrFen();
         bouton0Distance.setEnabled(false);
         bouton1Distance.setEnabled(false);

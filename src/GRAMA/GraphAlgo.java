@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
  * @author Giani VERRELLI - G2S2
  * @version 2.0
  */
-public class GRAPHMAP {
+public class GraphAlgo {
     private static Graph graph = new MultiGraph("GraphMap"); //Initialisation d'un graphe qui peut avoir plusieurs voisins
     private static Graph graph1Voisin = new MultiGraph("GraphMap1Voisin");
     private static Graph graph2Voisin = new MultiGraph("GraphMap2Voisin");
@@ -48,9 +48,6 @@ public class GRAPHMAP {
     private static SpriteManager sman1VoisinVilles = new SpriteManager(graph1VoisinVille);
     private static SpriteManager sman1VoisinLoisirs = new SpriteManager(graph1VoisinLoisirs);
     private static SpriteManager sman1VoisinResto = new SpriteManager(graph1VoisinResto);
-    private static LinkedHashMap map;
-    private static File s;
-    private static Viewer viewer;
 
     /**
      * Permet de lire le fichier passé en paramètre et de remplir la LinkedHashMap (dictionnaire ordonné)
@@ -455,7 +452,7 @@ public class GRAPHMAP {
         sprite.setAttribute("ui.label", node.toString()); //Le label du point est donc son nom
         sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
         Node voisin;
-        Edge heheheha;
+        Edge edgeVoisin;
         for (Object i : map.keySet()) {
             voisin = graph.getNode((String) i);
             if (voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString())) {
@@ -466,14 +463,14 @@ public class GRAPHMAP {
                 sprite.attachToNode(voisin.toString());
 
                 //Récupération du lien entre node principal et voisin
-                heheheha = node.getEdgeBetween(voisin);
-                splitId = heheheha.getId().split("--");
+                edgeVoisin = node.getEdgeBetween(voisin);
+                splitId = edgeVoisin.getId().split("--");
                 //Ajout lien node / voisin
-                graph1Voisin.addEdge(heheheha.getId(), node.toString(), voisin.toString());
+                graph1Voisin.addEdge(edgeVoisin.getId(), node.toString(), voisin.toString());
                 //Nom sur le lien
-                sprite = sman1voisin.addSprite(heheheha.getId());
+                sprite = sman1voisin.addSprite(edgeVoisin.getId());
                 sprite.setAttribute("ui.label", (splitId[0]));
-                sprite.attachToEdge(heheheha.getId());
+                sprite.attachToEdge(edgeVoisin.getId());
                 sprite.setPosition(0.5);
             }
         }
@@ -508,7 +505,7 @@ public class GRAPHMAP {
         sprite.setAttribute("ui.label", node.toString()); //Le label du point est donc son nom
         sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
         Node voisin;
-        Edge heheheha;
+        Edge edgeVoisin;
         for (Object i : map.keySet()) {
             voisin = graph.getNode((String) i);
             if (voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("V")) {
@@ -519,14 +516,14 @@ public class GRAPHMAP {
                 sprite.attachToNode(voisin.toString());
 
                 //Récupération du lien entre node principal et voisin
-                heheheha = node.getEdgeBetween(voisin);
-                splitId = heheheha.getId().split("--");
+                edgeVoisin = node.getEdgeBetween(voisin);
+                splitId = edgeVoisin.getId().split("--");
                 //Ajout lien node / voisin
-                graph1VoisinVille.addEdge(heheheha.getId(), node.toString(), voisin.toString());
+                graph1VoisinVille.addEdge(edgeVoisin.getId(), node.toString(), voisin.toString());
                 //Nom sur le lien
-                sprite = sman1VoisinVilles.addSprite(heheheha.getId());
+                sprite = sman1VoisinVilles.addSprite(edgeVoisin.getId());
                 sprite.setAttribute("ui.label", (splitId[0]));
-                sprite.attachToEdge(heheheha.getId());
+                sprite.attachToEdge(edgeVoisin.getId());
                 sprite.setPosition(0.5);
             }
         }
@@ -561,7 +558,7 @@ public class GRAPHMAP {
         sprite.setAttribute("ui.label", node.toString()); //Le label du point est donc son nom
         sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
         Node voisin;
-        Edge heheheha;
+        Edge edgeVoisin;
         for (Object i : map.keySet()) {
             voisin = graph.getNode((String) i);
             if (voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("L")) {
@@ -572,14 +569,14 @@ public class GRAPHMAP {
                 sprite.attachToNode(voisin.toString());
 
                 //Récupération du lien entre node principal et voisin
-                heheheha = node.getEdgeBetween(voisin);
-                splitId = heheheha.getId().split("--");
+                edgeVoisin = node.getEdgeBetween(voisin);
+                splitId = edgeVoisin.getId().split("--");
                 //Ajout lien node / voisin
-                graph1VoisinLoisirs.addEdge(heheheha.getId(), node.toString(), voisin.toString());
+                graph1VoisinLoisirs.addEdge(edgeVoisin.getId(), node.toString(), voisin.toString());
                 //Nom sur le lien
-                sprite = sman1VoisinLoisirs.addSprite(heheheha.getId());
+                sprite = sman1VoisinLoisirs.addSprite(edgeVoisin.getId());
                 sprite.setAttribute("ui.label", (splitId[0]));
-                sprite.attachToEdge(heheheha.getId());
+                sprite.attachToEdge(edgeVoisin.getId());
                 sprite.setPosition(0.5);
             }
         }
@@ -614,7 +611,7 @@ public class GRAPHMAP {
         sprite.setAttribute("ui.label", node.toString()); //Le label du point est donc son nom
         sprite.attachToNode(node.toString()); //... qu'on vient "attacher" au point créé
         Node voisin;
-        Edge heheheha;
+        Edge edgeVoisin;
         for (Object i : map.keySet()) {
             voisin = graph.getNode((String) i);
             if (voisin.hasEdgeToward(node) && !voisin.toString().equals(node.toString()) && voisin.toString().startsWith("R")) {
@@ -625,14 +622,14 @@ public class GRAPHMAP {
                 sprite.attachToNode(voisin.toString());
 
                 //Récupération du lien entre node principal et voisin
-                heheheha = node.getEdgeBetween(voisin);
-                splitId = heheheha.getId().split("--");
+                edgeVoisin = node.getEdgeBetween(voisin);
+                splitId = edgeVoisin.getId().split("--");
                 //Ajout lien node / voisin
-                graph1VoisinResto.addEdge(heheheha.getId(), node.toString(), voisin.toString());
+                graph1VoisinResto.addEdge(edgeVoisin.getId(), node.toString(), voisin.toString());
                 //Nom sur le lien
-                sprite = sman1VoisinResto.addSprite(heheheha.getId());
+                sprite = sman1VoisinResto.addSprite(edgeVoisin.getId());
                 sprite.setAttribute("ui.label", (splitId[0]));
-                sprite.attachToEdge(heheheha.getId());
+                sprite.attachToEdge(edgeVoisin.getId());
                 sprite.setPosition(0.5);
             }
         }
